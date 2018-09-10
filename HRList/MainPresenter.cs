@@ -11,7 +11,6 @@ namespace HRList
         private readonly IMessageService _mservice;
         private readonly IHRBuisnessLogic _buisnesslogic;
     
-
         public MainPresenter (IMainForm mainform, IInputForm iform, IMessageService mservice, IHRBuisnessLogic buisnesslogic)
         {
             _mainform = mainform;
@@ -58,9 +57,5 @@ namespace HRList
         {
             _iform.InputFormShowDialog();
         }
-
-
-
-
     }
 }

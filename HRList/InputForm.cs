@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows;
-
 using System.Windows.Forms;
 
 namespace HRList
@@ -22,11 +21,12 @@ namespace HRList
             InitializeComponent();
         }
 
-        #region Публичные свойства
+        #region Properties
         public string Login
         {
             get { return LoginBox.Text; }
         }
+
         public string Password
         {
             get { return PassBox.Text; }
@@ -37,16 +37,13 @@ namespace HRList
             ShowDialog();
         }
 
-
         public void InputFormDispos()
         {
             Dispose();
         }
         #endregion
 
-
-
-
+        #region Methods
         public void InputFormDialogResult() //сброс формы ввода
         {
             DialogResult = DialogResult.OK;
@@ -58,11 +55,11 @@ namespace HRList
         { 
             InputButtonClick?.Invoke(this, EventArgs.Empty);
         }
+        #endregion
 
-
-
+        #region Events
         public event EventHandler InputButtonClick;
-
+        #endregion
 
     }
 }

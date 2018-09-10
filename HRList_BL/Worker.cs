@@ -73,7 +73,8 @@ namespace HRList_BL
         #endregion
 
         #region Methods
-        public int Exper(string Name, DataSet ds)// Вычисление стажа
+        // Вычисление стажа.
+        public int Exper(string Name, DataSet ds)
         {
             string filter = string.Format("FullName='{0}'", Name);
             
@@ -83,7 +84,8 @@ namespace HRList_BL
             return experience;
         }
 
-        public int CountSubordinates (string Name, DataSet ds)// Вычисление количества подчиненных
+        // Вычисление количества подчиненных.
+        public int CountSubordinates (string Name, DataSet ds)
         {
             int count_div = 0;//количество сотрудников в отделе
             int count_gr = 0;//количество сотрудников в группе
@@ -103,14 +105,11 @@ namespace HRList_BL
 
                 if (supervisor && String.IsNullOrEmpty(name_subunit)) // условие начальника отдела (saleman)
                 { 
-                
-       
                     foreach (DataRow line in row1)
                     {
 
                         if (line[columns.IndexOf("Name_Unit")].ToString() == name_unit) count_div = count_div + 1;
                     }
-
                     count_s = count_div - 1;
                 }
 
@@ -124,23 +123,19 @@ namespace HRList_BL
 
                     count_s = count_gr - 1;
                 }
-
-
-
             }
-
-         
             return count_s;
-
         }
 
-        public int Tabel()// Получение количества отработанных дней (Из табеля или указывается вручную)
+        // Получение количества отработанных дней (Из табеля или указывается вручную).
+        public int Tabel()
         {
             int Count = 21;// функция не реализована принимается стандартное значение
             return Count;
         }
 
-        public double BonusManagerSubbordinates(string Name, DataSet ds ) // Вычисление надбавки менеджера за подчиненных;
+        // Вычисление надбавки менеджера за подчиненных.
+        public double BonusManagerSubbordinates(string Name, DataSet ds ) 
         {
             double bonus_s=0;
             string filter = string.Format("FullName='{0}'", Name);
@@ -161,7 +156,9 @@ namespace HRList_BL
             return bonus_s;
         }
 
-        public double BonusSubbordinates(string Name, DataSet ds)// Вычисление бонуса за подчиненных
+        // Вычисление бонуса за подчиненных.
+        public double BonusSubbordinates(string Name, DataSet ds)
+
         {
             double bonus_s=0;
             string filter = string.Format("FullName='{0}'", Name);
@@ -228,7 +225,8 @@ namespace HRList_BL
 
         }
 
-        public double BaseSalary(string Name, DataSet ds)// Вычисление базовой зарплаты
+        // Вычисление базовой зарплаты.
+        public double BaseSalary(string Name, DataSet ds)
         {
 
             string filter = string.Format("FullName='{0}'", Name);
@@ -240,7 +238,8 @@ namespace HRList_BL
 
         }
 
-        public double BonusExperience( string Name, DataSet ds)// Вычисление бонуса за стаж
+        // Вычисление бонуса за стаж.
+        public double BonusExperience( string Name, DataSet ds)
         {
 
             string filter = string.Format("FullName='{0}'", Name);
@@ -259,11 +258,4 @@ namespace HRList_BL
         }
         #endregion
     }
-
-
-
-
-
-
-
 }

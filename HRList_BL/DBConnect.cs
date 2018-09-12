@@ -8,18 +8,26 @@ namespace HRList_BL
 {
     public class DBConnect
     {
-        public DataSet dataset_1;
-        public DataRow datarow_1;
+        private DataSet _dataset;
+        private DataRow _datarow;
+        private string connectionString = "Data Source = HR_DB.db; Version=3";
 
-        public void ConnectToDB(string ConnectionString, string SqlQuery )
+
+        public DataSet DataSet
+        {
+            get { return _dataset; }
+        }
+
+
+        public void ConnectToDB(string sqlQuery)
         {
             // ConnectionString = "Data Source = HR_DB.db; Version=3";// добавить выбор БД в настройки.
-            dataset_1 = new DataSet();
-            SQLiteConnection DBase = new SQLiteConnection(ConnectionString);
-            DBase.Open();
-            SQLiteDataAdapter dataadapter = new SQLiteDataAdapter(SqlQuery, DBase);
-            dataadapter.Fill(dataset_1);
-            DBase.Close();
+            _dataset = new DataSet();
+            SQLiteConnection dbaseConnection = new SQLiteConnection(connectionString);
+            dbaseConnection.Open();
+            SQLiteDataAdapter dataAdapter = new SQLiteDataAdapter(sqlQuery, dbaseConnection);
+            dataAdapter.Fill(_dataset);
+            dbaseConnection.Close();
         }
     }
 }

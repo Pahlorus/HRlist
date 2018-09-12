@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,10 +10,6 @@ namespace HRList_BL
     class CountingModul
     {
         #region Fields
-        
-        Worker worker;
-        List<Worker> listWorkers;
-
         private string name;
         private int age;
         private string officePosition; //Должность
@@ -79,20 +76,20 @@ namespace HRList_BL
         }
         #endregion
 
-
         #region Methods
         // Вычисление стажа.
-        public int Experience (Worker worker)
+        public int Experience(string Name, DataSet ds)
         {
             string filter = string.Format("FullName='{0}'", Name);
 
             ds.Tables[0].Select(filter);
-            experience = Convert.ToInt32((DateTime.Today.Year - worker.StartTime.Year).ToString(), 10);
+            startTime = ds.Tables[0].Rows[0].Field<DateTime>("DataStart");
+            experience = Convert.ToInt32((DateTime.Today.Year - startTime.Year).ToString(), 10);
             return experience;
         }
 
         // Вычисление количества подчиненных.
-        public int CountSubordinates(Worker worker)
+        public int CountSubordinates(string Name, DataSet ds)
         {
             int count_div = 0;//количество сотрудников в отделе
             int count_gr = 0;//количество сотрудников в группе
@@ -254,7 +251,7 @@ namespace HRList_BL
             double bonusrate = row[0].Field<Double>("BonusRate_1");
             double bonuslimit = row[0].Field<Double>("ExpBonusLimit");
 
-            double bonus_e = (BaseSalary(Name, ds) / 100) * bonusrate * Exper(Name, ds);
+            double bonus_e = (BaseSalary(Name, ds) / 100) * bonusrate * Experience(Name, ds);
             if (bonus_e >= bonuslimit)
             {
                 bonus_e = (BaseSalary(Name, ds) / 100) * bonusrate;

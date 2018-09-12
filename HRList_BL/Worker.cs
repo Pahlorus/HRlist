@@ -18,7 +18,7 @@ namespace HRList_BL
         private double bonuspercent_1;// Процент премии за стаж
         private double bonuspercent_2; // Процент премии за подчиненных
         #endregion
-
+        
         #region Properties
         public string Name
         {
@@ -71,7 +71,7 @@ namespace HRList_BL
             set { bonuspercent_2 = value; }
         }
         #endregion
-
+        /*
         #region Methods
         // Вычисление стажа.
         public int Exper(string Name, DataSet ds)
@@ -257,5 +257,6 @@ namespace HRList_BL
 
         }
         #endregion
+        */
     }
 }

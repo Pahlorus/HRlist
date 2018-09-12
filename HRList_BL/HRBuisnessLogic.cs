@@ -19,8 +19,9 @@ namespace HRList_BL
 
     public class HRBuisnessLogic: IHRBuisnessLogic
     {
+    
         #region Fields
-        private string ConnectionString = "Data Source = HR_DB.db; Version=3";
+       
         // Пользователь входящий в систему.
         private string activeuser;
         // зарплата.
@@ -38,7 +39,18 @@ namespace HRList_BL
         // Имя группы.
         private string namesubunit;
         private DataTable set;
+        private CountingModul _countingModul;
+        private HRModul _hrModul;
+        private SQLQueries _sqlQueries;
         #endregion
+
+        public HRBuisnessLogic()
+        {
+            _countingModul = new CountingModul();
+            _hrModul = new HRModul();
+            _sqlQueries = new SQLQueries();
+
+        }
 
         #region Properties
 
@@ -78,17 +90,11 @@ namespace HRList_BL
         public string SalaryCalculation()
         {
             DBConnect DBexemp = new DBConnect();
-            string SqlQuery = @"SELECT p.ID_Human, p.FullName, p.DataStart, p.PersonalBonus, p.Supervisor, s1.Position, s1.BaseSalary, s1.CurrencyCode, s1.BonusRate_1, s1.BonusRate_2, s1.ExpBonusLimit, u.Name_Unit, s2.Name_SubUnit
-            FROM PrivateList p 
-	        INNER JOIN Staff s ON ( p.ID_Human = s.ID_Human  )  
-		    INNER JOIN StaffRules s1 ON ( s.ID_Position = s1.ID_Position  )  
-		    INNER JOIN Unit u ON ( s.ID_Unit = u.ID_Unit  )  
-		    INNER JOIN SubUnit s2 ON ( s.ID_SubUnit = s2.ID_SubUnit  )    ";
-
-            DBexemp.ConnectToDB(ConnectionString, SqlQuery);
-            DataSet ds = DBexemp.dataset_1;
+            string SqlQuery = SQLQueries.Instance.GeneralQuery;
+            DBexemp.ConnectToDB(SqlQuery);
+            DataSet ds = DBexemp.DataSet;
             Worker worker = new Worker();
-            double salary_1 = worker.BaseSalary(activeuser, ds) + worker.BonusExperience(activeuser, ds) + worker.BonusSubbordinates(activeuser, ds);
+            double salary_1 = _countingModul.BaseSalary(activeuser, ds) + _countingModul.BonusExperience(activeuser, ds) + _countingModul.BonusSubbordinates(activeuser, ds);
             salary = salary_1.ToString();
             return salary;
         }
@@ -98,13 +104,9 @@ namespace HRList_BL
         {
             activeuser = "";
             DBConnect DBexemp = new DBConnect();
-            string SqlQuery_input = @"SELECT  p.id_human, p.fullname, p.password, p.supervisor, s2.position, 
-                                    u.name_unit, s3.name_subunit, a.rules
-                                    FROM  privatelist p, staff s, staffrules s2, subunit s3, unit u, access_rights a
-                                    WHERE  p.id_human=s.id_human AND s.id_position=s2.id_position AND s.id_subunit=s3.id_subunit AND 
-                                    s.id_unit=u.id_unit AND a.id_access=s.id_access";
-            DBexemp.ConnectToDB(ConnectionString, SqlQuery_input);
-            foreach (DataRow row in DBexemp.dataset_1.Tables[0].Rows)
+            string SqlQuery_input = SQLQueries.Instance.InputQuery;
+            DBexemp.ConnectToDB(SqlQuery_input);
+            foreach (DataRow row in DBexemp.DataSet.Tables[0].Rows)
             {
                 if (log == row[1].ToString() && pass == row[2].ToString())
                 {
@@ -117,54 +119,31 @@ namespace HRList_BL
                     {
                         case "Employee":
                             {
-                                SqlQuery_rules = @"SELECT  p.id_human, p.fullname, p.supervisor, s2.position, u.name_unit, 
-                        s3.name_subunit
-                        FROM  privatelist p, staff s, staffrules s2, subunit s3, unit u, access_rights a
-                        WHERE  p.id_human=s.id_human AND s.id_position=s2.id_position AND s.id_subunit=s3.id_subunit AND 
-                        s.id_unit=u.id_unit AND a.id_access=s.id_access";
+                                SqlQuery_rules = SQLQueries.Instance.EmployeeAccessRules;
                                 filter = string.Format("[FullName]='{0}'", log);
                             }
                             break;
                         case "Manager":
                             {
-                                SqlQuery_rules = @"SELECT  p.id_human, p.fullname, p.supervisor, s2.position, u.name_unit, 
-                                     s3.name_subunit, s2.basesalary, s2.currencycode
-                                     FROM  privatelist p, staff s, staffrules s2, subunit s3, unit u, access_rights a
-                                     WHERE  p.id_human=s.id_human AND s.id_position=s2.id_position AND s.id_subunit=s3.id_subunit AND 
-                                     s.id_unit=u.id_unit AND a.id_access=s.id_access";
+                                SqlQuery_rules = SQLQueries.Instance.ManagerAccessRules;
                                 filter = string.Format("[Name_Unit]='{0}' AND [Name_SubUnit]='{1}'", nameunit, namesubunit);
                             }
                             break;
                         case "Salesman":
                             {
-                                SqlQuery_rules = @"SELECT  p.id_human, p.fullname, p.supervisor, s2.position, u.name_unit, 
-                                     s3.name_subunit, s2.basesalary, s2.currencycode, s2.bonusrate_1, s2.bonusrate_2, 
-                                     s2.expbonuslimit
-                                     FROM  privatelist p, staff s, staffrules s2, subunit s3, unit u, access_rights a
-                                     WHERE  p.id_human=s.id_human AND s.id_position=s2.id_position AND s.id_subunit=s3.id_subunit AND 
-                                     s.id_unit=u.id_unit AND a.id_access=s.id_access";
+                                SqlQuery_rules = SQLQueries.Instance.SalesmanAccessRules;
                                 filter = string.Format("[Name_Unit]='{0}'", nameunit);
                             }
                             break;
                         case "HR_Manager":
                             {
-                                SqlQuery_rules = @"SELECT  p.id_human, p.fullname, p.supervisor, s2.position, u.name_unit, 
-                                     s3.name_subunit, s2.basesalary, s2.currencycode, s2.bonusrate_1, s2.bonusrate_2, 
-                                     s2.expbonuslimit
-                                     FROM  privatelist p, staff s, staffrules s2, subunit s3, unit u, access_rights a
-                                     WHERE  p.id_human=s.id_human AND s.id_position=s2.id_position AND s.id_subunit=s3.id_subunit AND 
-                                     s.id_unit=u.id_unit AND a.id_access=s.id_access";
+                                SqlQuery_rules = SQLQueries.Instance.HRManagerAccessRules;
                                 filter = string.Empty;
                             }
                             break;
                         case "Administrator":
                             {
-                                SqlQuery_rules = @"SELECT  p.id_human, p.fullname, p.supervisor, s2.position, u.name_unit, 
-                                     s3.name_subunit, s2.basesalary, s2.currencycode, s2.bonusrate_1, s2.bonusrate_2, 
-                                     s2.expbonuslimit
-                                     FROM  privatelist p, staff s, staffrules s2, subunit s3, unit u, access_rights a
-                                     WHERE  p.id_human=s.id_human AND s.id_position=s2.id_position AND s.id_subunit=s3.id_subunit AND 
-                                     s.id_unit=u.id_unit AND a.id_access=s.id_access";
+                                SqlQuery_rules = SQLQueries.Instance.AdministratorAccessRules;
                                 filter = string.Empty;
                             }
                             break;
@@ -175,9 +154,9 @@ namespace HRList_BL
                             }
                             break;
                     }
-                    DBexemp.ConnectToDB(ConnectionString, SqlQuery_rules);
-                    DBexemp.dataset_1.Tables[0].DefaultView.RowFilter = filter;
-                    set = DBexemp.dataset_1.Tables[0];
+                    DBexemp.ConnectToDB(SqlQuery_rules);
+                    DBexemp.DataSet.Tables[0].DefaultView.RowFilter = filter;
+                    set = DBexemp.DataSet.Tables[0];
                     break;
                 }
             }

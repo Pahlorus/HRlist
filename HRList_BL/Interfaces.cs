@@ -9,7 +9,6 @@ namespace HRList_BL
 {
     interface IDb
     {
-        void GetData(string query, DataTable table);
         bool AuthorizationDB(string login, string password, out string rules, out int idRules);
         void GetUserData(string login, int idRules, DataTable table);
     }

@@ -156,7 +156,6 @@ namespace HRList_BL
             _rulesUser = string.Empty;
             _idRules = 0;
             _table.Clear();
-            //_table.Reset();
             _isInputSuccessful = false;
             _activeUser = string.Empty;
         }

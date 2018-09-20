@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="HRList_BL.CountingModul" Collapsed="true">
+    <Position X="4.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAQHIQAkAiABUAMAgVAAAAAAhAAAQAQAg=</HashCode>
+      <FileName>CountingModul.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HRList_BL.DBConnect" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AyAIAggBEACAAAAAAgAAAAAgAAAAQAAIAACAAAAQAAA=</HashCode>
+      <FileName>DBConnect.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="HRList_BL.HRBuisnessLogic" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="8" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AYQgAQggAAICAgAAQgCAQAAAQBAAgAgCRAAQIAAEEAI=</HashCode>
+      <FileName>HRBuisnessLogic.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="HRList_BL.Report" Collapsed="true">
+    <Position X="2.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Report.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HRList_BL.SQLQueries" Collapsed="true">
+    <Position X="10.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAwAwCAAgAAAAAAQAAQBAQgCAAAAAEAI=</HashCode>
+      <FileName>SQLQueries.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Object" Collapsed="true">
+    <Position X="8" Y="1.25" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Interface Name="HRList_BL.IDb" Collapsed="true">
+    <Position X="6.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEACAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="HRList_BL.IHRBuisnessLogic" Collapsed="true">
+    <Position X="8" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAgAQgAAAICAAAAAgAAQAAAQBAAAAgCBAAQIAAAAAA=</HashCode>
+      <FileName>Interfaces.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

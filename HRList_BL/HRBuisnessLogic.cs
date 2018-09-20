@@ -16,7 +16,6 @@ namespace HRList_BL
         private bool _isInputSuccessful;
         private DataTable _table;
         private CountingModul _countingModul;
-        private SQLQueries _sqlQueries;
         private DBConnect _dbExemplar;
         private Dictionary<string, string> _unitList;
         private Dictionary<string, string> _subUnitList;
@@ -28,7 +27,6 @@ namespace HRList_BL
         {
             _countingModul = new CountingModul();
             _table = new DataTable();
-            _sqlQueries = new SQLQueries();
             _dbExemplar = new DBConnect();
             _unitList = new Dictionary<string, string>();
             _subUnitList = new Dictionary<string, string>();

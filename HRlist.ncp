@@ -1,0 +1,538 @@
+<Project>
+  <Name>HRlist</Name>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>HRList_BL.dll</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Interface">
+        <Name>IDb</Name>
+        <Access>Internal</Access>
+        <Location left="706" top="235" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">Void GetData(String query, DataTable table)</Member>
+        <Member type="Method">Boolean AuthorizationDB(String login, String password, out String rules, out Int32 idRules)</Member>
+        <Member type="Method">Void GetUserData(String login, Int32 idRules, DataTable table)</Member>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IHRBuisnessLogic</Name>
+        <Access>Public</Access>
+        <Location left="434" top="235" />
+        <Size width="162" height="350" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">String Login { set; }</Member>
+        <Member type="Property">String Password { set; }</Member>
+        <Member type="Property">String ActiveUser { get; }</Member>
+        <Member type="Property">String RulesUser { get; }</Member>
+        <Member type="Property">Int32 IdRules { get; }</Member>
+        <Member type="Property">DataTable Table { get; }</Member>
+        <Member type="Property">Dictionary&lt;String, String&gt; UnitList { get; set; }</Member>
+        <Member type="Property">Dictionary&lt;String, String&gt; SubUnitList { get; set; }</Member>
+        <Member type="Property">Dictionary&lt;String, String&gt; PositiontList { get; set; }</Member>
+        <Member type="Property">Dictionary&lt;String, String&gt; AccessRulesList { get; set; }</Member>
+        <Member type="Event">event EventHandler Message</Member>
+        <Member type="Method">Void GetUserList()</Member>
+        <Member type="Method">Void GetSettings()</Member>
+        <Member type="Method">Void UserInput(String login, String password)</Member>
+        <Member type="Method">Void UserOutput()</Member>
+        <Member type="Method">Dictionary&lt;String, String&gt; ReportCreate(String name, DataTable table)</Member>
+        <Member type="Method">Void NewUserCreate(Dictionary&lt;String, String&gt; newUser, DataTable table)</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>CountingModul</Name>
+        <Access>Internal</Access>
+        <Location left="91" top="86" />
+        <Size width="162" height="587" />
+        <Collapsed>True</Collapsed>
+        <Member type="Field">private String name</Member>
+        <Member type="Field">private Int32 age</Member>
+        <Member type="Field">private String officePosition</Member>
+        <Member type="Field">private Int32 experience</Member>
+        <Member type="Field">private Int32 subbordinatecount_2</Member>
+        <Member type="Field">private Int32 subbordinatecount_3</Member>
+        <Member type="Field">private Double baserate</Member>
+        <Member type="Field">private Double personalbonus</Member>
+        <Member type="Field">private Double bonuspercent_1</Member>
+        <Member type="Field">private Double bonuspercent_2</Member>
+        <Member type="Field">private static DateTime startTime</Member>
+        <Member type="Property">public String Name { get; set; }</Member>
+        <Member type="Property">public Int32 Age { get; set; }</Member>
+        <Member type="Property">public String OfficePosition { get; set; }</Member>
+        <Member type="Property">public DateTime StartTime { get; set; }</Member>
+        <Member type="Property">public Int32 SubbordinateCount_2 { get; set; }</Member>
+        <Member type="Property">public Int32 SubbordinateCount_3 { get; set; }</Member>
+        <Member type="Property">public Double BaseRate { get; set; }</Member>
+        <Member type="Property">public Double PersonalBonus { get; set; }</Member>
+        <Member type="Property">public Double BonusPercent_1 { get; set; }</Member>
+        <Member type="Property">public Double BonusPercent_2 { get; set; }</Member>
+        <Member type="Constructor">public CountingModul()</Member>
+        <Member type="Method">public Double SalaryCalculation(String name, DataTable table)</Member>
+        <Member type="Method">public Int32 Experience(String Name, DataTable table)</Member>
+        <Member type="Method">public Int32 CountSubordinates(String Name, DataTable table)</Member>
+        <Member type="Method">public Int32 GetTabel()</Member>
+        <Member type="Method">public Double BonusManagerSubbordinates(String Name, DataTable table)</Member>
+        <Member type="Method">public Double BonusSubbordinates(String Name, DataTable table)</Member>
+        <Member type="Method">public Double BaseSalary(String Name, DataTable table)</Member>
+        <Member type="Method">public Double BonusExperience(String Name, DataTable table)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>DBConnect</Name>
+        <Access>Internal</Access>
+        <Location left="708" top="86" />
+        <Size width="162" height="366" />
+        <Collapsed>True</Collapsed>
+        <Member type="Field">private SQLQueries _sqlQueries</Member>
+        <Member type="Field">private String nameunit</Member>
+        <Member type="Field">private String namesubunit</Member>
+        <Member type="Field">private String _connectionString</Member>
+        <Member type="Field">private SQLiteConnection _dbaseConnection</Member>
+        <Member type="Field">private SQLiteDataAdapter _dataAdapter</Member>
+        <Member type="Event">private event EventHandler DataSetError</Member>
+        <Member type="Event">private event EventHandler DataGetError</Member>
+        <Member type="Event">private event EventHandler ConnectError</Member>
+        <Member type="Constructor">public DBConnect()</Member>
+        <Member type="Method">public Void GetSettingsAll(Dictionary&lt;String, String&gt; UnitList, Dictionary&lt;String, String&gt; subUnitList, Dictionary&lt;String, String&gt; positionList, Dictionary&lt;String, String&gt; accessRulesList)</Member>
+        <Member type="Method">public Void GetSettings(Dictionary&lt;String, String&gt; dictionary, String SQLQueries)</Member>
+        <Member type="Method">public Void GetData(String sqlQuery, DataTable table)</Member>
+        <Member type="Method">public Void SetData(Dictionary&lt;String, String&gt; newUser, Dictionary&lt;String, String&gt; UnitList, Dictionary&lt;String, String&gt; subUnitList, Dictionary&lt;String, String&gt; positionList, Dictionary&lt;String, String&gt; accessRulesList, DataTable table)</Member>
+        <Member type="Method">public Void ConnectDB(String sqlQuery)</Member>
+        <Member type="Method">public Boolean AuthorizationDB(String login, String password, out String rules, out Int32 idRules)</Member>
+        <Member type="Method">public Void GetUserData(String login, Int32 idRules, DataTable table)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>HRBuisnessLogic</Name>
+        <Access>Public</Access>
+        <Location left="423" top="86" />
+        <Size width="162" height="604" />
+        <Collapsed>True</Collapsed>
+        <Member type="Field">private String _activeUser</Member>
+        <Member type="Field">private String _rulesUser</Member>
+        <Member type="Field">private String _password</Member>
+        <Member type="Field">private String _login</Member>
+        <Member type="Field">private Int32 _idRules</Member>
+        <Member type="Field">private Boolean _isInputSuccessful</Member>
+        <Member type="Field">private DataTable _table</Member>
+        <Member type="Field">private CountingModul _countingModul</Member>
+        <Member type="Field">private DBConnect _dbExemplar</Member>
+        <Member type="Field">private Dictionary&lt;String, String&gt; _unitList</Member>
+        <Member type="Field">private Dictionary&lt;String, String&gt; _subUnitList</Member>
+        <Member type="Field">private Dictionary&lt;String, String&gt; _positionList</Member>
+        <Member type="Field">private Dictionary&lt;String, String&gt; _accessRulesList</Member>
+        <Member type="Property">public String Login { set; }</Member>
+        <Member type="Property">public String Password { set; }</Member>
+        <Member type="Property">public String ActiveUser { get; }</Member>
+        <Member type="Property">public String RulesUser { get; }</Member>
+        <Member type="Property">public Int32 IdRules { get; }</Member>
+        <Member type="Property">public DataTable Table { get; }</Member>
+        <Member type="Property">public Dictionary&lt;String, String&gt; UnitList { get; set; }</Member>
+        <Member type="Property">public Dictionary&lt;String, String&gt; SubUnitList { get; set; }</Member>
+        <Member type="Property">public Dictionary&lt;String, String&gt; PositiontList { get; set; }</Member>
+        <Member type="Property">public Dictionary&lt;String, String&gt; AccessRulesList { get; set; }</Member>
+        <Member type="Event">public event EventHandler Message</Member>
+        <Member type="Constructor">public HRBuisnessLogic()</Member>
+        <Member type="Method">public Dictionary&lt;String, String&gt; ReportCreate(String name, DataTable table)</Member>
+        <Member type="Method">public Void NewUserCreate(Dictionary&lt;String, String&gt; newUser, DataTable table)</Member>
+        <Member type="Method">public Void GetSettings()</Member>
+        <Member type="Method">public Void UserInput(String login, String password)</Member>
+        <Member type="Method">public Void UserOutput()</Member>
+        <Member type="Method">public Void GetUserList()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Report</Name>
+        <Access>Internal</Access>
+        <Location left="91" top="235" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Constructor">public Report()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>SQLQueries</Name>
+        <Access>Internal</Access>
+        <Location left="971" top="86" />
+        <Size width="162" height="332" />
+        <Collapsed>True</Collapsed>
+        <Member type="Field">private String _generalQuery</Member>
+        <Member type="Field">private String _userListQuery</Member>
+        <Member type="Field">private String _subunitQuery</Member>
+        <Member type="Field">private String _unitQuery</Member>
+        <Member type="Field">private String _accessRulesQuery</Member>
+        <Member type="Field">private String _positionQuery</Member>
+        <Member type="Property">public static SQLQueries Instance { get; private set; }</Member>
+        <Member type="Property">public String GeneralQuery { get; }</Member>
+        <Member type="Property">public String UserListQuery { get; }</Member>
+        <Member type="Property">public String SubunitQuery { get; }</Member>
+        <Member type="Property">public String UnitQuery { get; }</Member>
+        <Member type="Property">public String AccessRulesQuery { get; }</Member>
+        <Member type="Property">public String PositionQuery { get; }</Member>
+        <Member type="Constructor">public SQLQueries()</Member>
+        <Member type="Method">public String UserRulesFilterCreate(Int32 idRule, String login, String nameunit, String namesubunit)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Realization" first="3" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="4" second="1">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="3" second="6">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <StartRole>_sqlQueries</StartRole>
+        <EndMultiplicity>1</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Association" first="4" second="2">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>384</X>
+          <Y>112</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>350</X>
+          <Y>112</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <StartRole>_countingModul</StartRole>
+        <EndMultiplicity>1</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Association" first="4" second="3">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <StartRole>_dbExemplar</StartRole>
+        <EndMultiplicity>1</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Association" first="4" second="5">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>467</X>
+          <Y>156</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>HRList.exe</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Interface">
+        <Name>IMainForm</Name>
+        <Access>Public</Access>
+        <Location left="578" top="384" />
+        <Size width="162" height="350" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">String SetActiveUser { set; }</Member>
+        <Member type="Property">String RequestedUser { get; }</Member>
+        <Member type="Property">String SetRulesUser { set; }</Member>
+        <Member type="Property">String Result { set; }</Member>
+        <Member type="Property">DataTable Table { get; set; }</Member>
+        <Member type="Property">Dictionary&lt;String, String&gt; Report { set; }</Member>
+        <Member type="Property">Dictionary&lt;String, String&gt; EditUser { get; set; }</Member>
+        <Member type="Property">Dictionary&lt;String, String&gt; UnitList { get; set; }</Member>
+        <Member type="Property">Dictionary&lt;String, String&gt; SubUnitList { get; set; }</Member>
+        <Member type="Property">Dictionary&lt;String, String&gt; PositiontList { get; set; }</Member>
+        <Member type="Property">Dictionary&lt;String, String&gt; AccessRulesList { get; set; }</Member>
+        <Member type="Event">event EventHandler FormShown</Member>
+        <Member type="Event">event EventHandler InputBDMenuClick</Member>
+        <Member type="Event">event EventHandler OutputBDMenuClick</Member>
+        <Member type="Event">event EventHandler ShowResult</Member>
+        <Member type="Event">event EventHandler OnAddUser</Member>
+        <Member type="Method">Void ColumnWidthSetup()</Member>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IInputForm</Name>
+        <Access>Public</Access>
+        <Location left="372" top="524" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">String Login { get; }</Member>
+        <Member type="Property">String Password { get; }</Member>
+        <Member type="Event">event EventHandler InputButtonClick</Member>
+        <Member type="Method">Void InputFormDispos()</Member>
+        <Member type="Method">Void InputFormShowDialog()</Member>
+        <Member type="Method">Void InputFormDialogResult()</Member>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IMessageService</Name>
+        <Access>Public</Access>
+        <Location left="119" top="524" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">Void ShowMessage(String MessageText)</Member>
+        <Member type="Method">Void ShowError(String ErrorText)</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>UserEditForm</Name>
+        <Access>Public</Access>
+        <Location left="578" top="985" />
+        <Size width="162" height="468" />
+        <Collapsed>True</Collapsed>
+        <Member type="Field">private IContainer components</Member>
+        <Member type="Field">private CheckBox checkSupervisorBox</Member>
+        <Member type="Field">private Button writeUserButton</Member>
+        <Member type="Field">private TextBox textBoxName</Member>
+        <Member type="Field">private Label label1</Member>
+        <Member type="Field">private ComboBox userPositionCBox</Member>
+        <Member type="Field">private ComboBox unitCBox</Member>
+        <Member type="Field">private ComboBox subUnitCBox</Member>
+        <Member type="Field">private Label label2</Member>
+        <Member type="Field">private Label label3</Member>
+        <Member type="Field">private Label label4</Member>
+        <Member type="Property">public String UserName { get; }</Member>
+        <Member type="Property">public Boolean IsSupervisor { get; }</Member>
+        <Member type="Property">public ComboBox Position { get; set; }</Member>
+        <Member type="Property">public ComboBox Unit { get; set; }</Member>
+        <Member type="Property">public ComboBox SubUnit { get; set; }</Member>
+        <Member type="Event">public event EventHandler OnAddUser</Member>
+        <Member type="Constructor">public UserEditForm()</Member>
+        <Member type="Method">private Void CheckBox1_CheckedChanged(Object sender, EventArgs e)</Member>
+        <Member type="Method">private Void WriteUserButton_Click(Object sender, EventArgs e)</Member>
+        <Member type="Method">private Void UserEditForm_Shown(Object sender, EventArgs e)</Member>
+        <Member type="Method">protected virtual Void Dispose(Boolean disposing)</Member>
+        <Member type="Method">private Void InitializeComponent()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>InputForm</Name>
+        <Access>Public</Access>
+        <Location left="372" top="854" />
+        <Size width="162" height="315" />
+        <Collapsed>True</Collapsed>
+        <Member type="Field">private IContainer components</Member>
+        <Member type="Field">private TextBox LoginBox</Member>
+        <Member type="Field">private TextBox PassBox</Member>
+        <Member type="Field">private Button InputButton</Member>
+        <Member type="Property">public String Login { get; }</Member>
+        <Member type="Property">public String Password { get; }</Member>
+        <Member type="Event">public event EventHandler InputButtonClick</Member>
+        <Member type="Constructor">public InputForm()</Member>
+        <Member type="Method">public Void InputFormShowDialog()</Member>
+        <Member type="Method">public Void InputFormDispos()</Member>
+        <Member type="Method">public Void InputFormDialogResult()</Member>
+        <Member type="Method">private Void InputButton_Click(Object sender, EventArgs e)</Member>
+        <Member type="Method">protected virtual Void Dispose(Boolean disposing)</Member>
+        <Member type="Method">private Void InitializeComponent()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>MainForm</Name>
+        <Access>Public</Access>
+        <Location left="578" top="854" />
+        <Size width="162" height="995" />
+        <Collapsed>True</Collapsed>
+        <Member type="Field">private UserEditForm _editForm</Member>
+        <Member type="Field">private String _requestedUser</Member>
+        <Member type="Field">private String _result</Member>
+        <Member type="Field">private Dictionary&lt;String, String&gt; _report</Member>
+        <Member type="Field">private Dictionary&lt;String, String&gt; _editUser</Member>
+        <Member type="Field">private Dictionary&lt;String, String&gt; _unitList</Member>
+        <Member type="Field">private Dictionary&lt;String, String&gt; _subUnitList</Member>
+        <Member type="Field">private Dictionary&lt;String, String&gt; _positionList</Member>
+        <Member type="Field">private Dictionary&lt;String, String&gt; _accessRulesList</Member>
+        <Member type="Field">private IContainer components</Member>
+        <Member type="Field">private DataGridView DBView1</Member>
+        <Member type="Field">private MenuStrip menuStrip1</Member>
+        <Member type="Field">private ToolStripMenuItem настройкиToolStripMenuItem</Member>
+        <Member type="Field">private ToolStripMenuItem оПрограммеToolStripMenuItem</Member>
+        <Member type="Field">private ToolStripMenuItem ToolsToolStripMenuItem</Member>
+        <Member type="Field">private ToolStripMenuItem InputBDMenuItem</Member>
+        <Member type="Field">private StatusStrip statusStrip1</Member>
+        <Member type="Field">private ToolStripStatusLabel toolStripStatusLabel1</Member>
+        <Member type="Field">private ToolStripStatusLabel lblUserName</Member>
+        <Member type="Field">private ToolStripMenuItem WorkerFileToolStripMenuItem</Member>
+        <Member type="Field">private ToolStripMenuItem ResultCalculateMenuItem</Member>
+        <Member type="Field">private ToolStripMenuItem базаДанныхToolStripMenuItem</Member>
+        <Member type="Field">private ToolStripMenuItem OutputDBMenuItem</Member>
+        <Member type="Field">private ToolStripStatusLabel lblUserRules</Member>
+        <Member type="Property">public String SetActiveUser { set; }</Member>
+        <Member type="Property">public String SetRulesUser { set; }</Member>
+        <Member type="Property">public String RequestedUser { get; }</Member>
+        <Member type="Property">public String Result { set; }</Member>
+        <Member type="Property">public Dictionary&lt;String, String&gt; Report { set; }</Member>
+        <Member type="Property">public Dictionary&lt;String, String&gt; EditUser { get; set; }</Member>
+        <Member type="Property">public Dictionary&lt;String, String&gt; UnitList { get; set; }</Member>
+        <Member type="Property">public Dictionary&lt;String, String&gt; SubUnitList { get; set; }</Member>
+        <Member type="Property">public Dictionary&lt;String, String&gt; PositiontList { get; set; }</Member>
+        <Member type="Property">public Dictionary&lt;String, String&gt; AccessRulesList { get; set; }</Member>
+        <Member type="Property">public String SelectedName { get; }</Member>
+        <Member type="Property">public DataTable Table { get; set; }</Member>
+        <Member type="Event">public event EventHandler FormShown</Member>
+        <Member type="Event">public event EventHandler InputBDMenuClick</Member>
+        <Member type="Event">public event EventHandler OutputBDMenuClick</Member>
+        <Member type="Event">public event EventHandler ShowResult</Member>
+        <Member type="Event">public event EventHandler OnAddUser</Member>
+        <Member type="Constructor">public MainForm()</Member>
+        <Member type="Method">private Void InputBDMenuItem_Click(Object sender, EventArgs e)</Member>
+        <Member type="Method">private Void OutputDBMenuItem_Click(Object sender, EventArgs e)</Member>
+        <Member type="Method">private Void ResultCalculateMenuItem_Click(Object sender, EventArgs e)</Member>
+        <Member type="Method">private Void DBView1_CellMouseDoubleClick(Object sender, DataGridViewCellMouseEventArgs e)</Member>
+        <Member type="Method">private Void FormResultCreate()</Member>
+        <Member type="Method">private Void WorkerFileToolStripMenuItem_Click(Object sender, EventArgs e)</Member>
+        <Member type="Method">private Void _editForm_Shown(Object sender, EventArgs e)</Member>
+        <Member type="Method">private Void Edittform_OnAddUser(Object sender, EventArgs e)</Member>
+        <Member type="Method">private Void MainForm_Shown(Object sender, EventArgs e)</Member>
+        <Member type="Method">public Void ColumnWidthSetup()</Member>
+        <Member type="Method">protected virtual Void Dispose(Boolean disposing)</Member>
+        <Member type="Method">private Void InitializeComponent()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>MainPresenter</Name>
+        <Access>Public</Access>
+        <Location left="185" top="240" />
+        <Size width="493" height="281" />
+        <Collapsed>True</Collapsed>
+        <Member type="Field">private readonly IMainForm _mainform</Member>
+        <Member type="Field">private readonly IInputForm _iform</Member>
+        <Member type="Field">private readonly IMessageService _mservice</Member>
+        <Member type="Field">private readonly IHRBuisnessLogic _buisnesslogic</Member>
+        <Member type="Constructor">public MainPresenter(IMainForm mainform, IInputForm iform, IMessageService mservice, IHRBuisnessLogic buisnesslogic)</Member>
+        <Member type="Method">private Void _mainform_OnAddUser(Object sender, EventArgs e)</Member>
+        <Member type="Method">private Void _mainform_ShowResult(Object sender, EventArgs e)</Member>
+        <Member type="Method">private Void _buisnesslogic_Message(Object sender, EventArgs e)</Member>
+        <Member type="Method">private Void _mainform_InputBDMenuClick(Object sender, EventArgs e)</Member>
+        <Member type="Method">private Void _mainform_OutputBDMenuClick(Object sender, EventArgs e)</Member>
+        <Member type="Method">private Void _iform_InputButtonClick(Object sender, EventArgs e)</Member>
+        <Member type="Method">private Void _mainform_FormShown(Object sender, EventArgs e)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>MessageService</Name>
+        <Access>Public</Access>
+        <Location left="119" top="854" />
+        <Size width="162" height="216" />
+        <Collapsed>True</Collapsed>
+        <Member type="Constructor">public MessageService()</Member>
+        <Member type="Method">public Void ShowMessage(String MessageText)</Member>
+        <Member type="Method">public Void ShowError(String ErrorText)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Program</Name>
+        <Access>Internal</Access>
+        <Location left="370" top="134" />
+        <Size width="162" height="216" />
+        <Collapsed>True</Collapsed>
+        <Member type="Method">private static Void Main()</Member>
+        <Modifier>Static</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ResultFormcs</Name>
+        <Access>Public</Access>
+        <Location left="800" top="985" />
+        <Size width="162" height="216" />
+        <Collapsed>True</Collapsed>
+        <Member type="Field">private IContainer components</Member>
+        <Member type="Constructor">public ResultFormcs()</Member>
+        <Member type="Method">protected virtual Void Dispose(Boolean disposing)</Member>
+        <Member type="Method">private Void InitializeComponent()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Realization" first="4" second="1">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>455</X>
+          <Y>829</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>455</X>
+          <Y>769</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Realization" first="5" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="7" second="2">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="5" second="3">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <StartRole>_editForm</StartRole>
+        <EndMultiplicity>1</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Association" first="6" second="0">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>641</X>
+          <Y>310</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <StartRole>_mainform</StartRole>
+        <EndMultiplicity>1</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Association" first="6" second="1">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>454</X>
+          <Y>310</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <StartRole>_iform</StartRole>
+        <EndMultiplicity>1</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Association" first="6" second="2">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>204</X>
+          <Y>322</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <StartRole>_mservice</StartRole>
+        <EndMultiplicity>1</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Association" first="5" second="9">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+</Project>

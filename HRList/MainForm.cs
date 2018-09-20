@@ -7,40 +7,17 @@ using System.Collections.Generic;
 
 namespace HRList
 {
-    public interface IMainForm
-    {
-        event EventHandler FormShown;
-        event EventHandler InputBDMenuClick;
-        event EventHandler OutputBDMenuClick;
-        event EventHandler ShowResult;
-        event EventHandler OnAddUser;
-
-        string SetActiveUser { set; }
-        string SetRulesUser { set; }
-        string Result { set; }
-        DataTable Table { set; }
-        Dictionary<string, string> Report { set; }
-        Dictionary<string, string> EditUser { get;  set; }
-       // Dictionary<string, string> ReportCreate(string name, DataTable table);
-        Dictionary<string, string> UnitList { get; set; }
-        Dictionary<string, string> SubUnitList { get; set; }
-        Dictionary<string, string> PositiontList { get; set; }
-        Dictionary<string, string> AccessRulesList { get; set; }
-        void ColumnWidthSetup();
-    }
     public partial class MainForm : Form, IMainForm
     {
         private UserEditForm _editForm;
+        private string _requestedUser;
         private string _result;
-        private DataRow row;
         private Dictionary<string, string> _report;
         private Dictionary<string, string> _editUser;
         private Dictionary<string, string> _unitList;
         private Dictionary<string, string> _subUnitList;
         private Dictionary<string, string> _positionList;
         private Dictionary<string, string> _accessRulesList;
-
-
 
         public MainForm()
         {
@@ -54,8 +31,7 @@ namespace HRList
             _positionList = new Dictionary<string, string>();
             _accessRulesList = new Dictionary<string, string>();
 
-    }
-
+        }
 
         #region Properties
         public string SetActiveUser
@@ -64,7 +40,24 @@ namespace HRList
         }
         public string SetRulesUser
         {
-            set { lblUserRules.Text = value; }
+            set
+            {
+                lblUserRules.Text = value;
+                if (value == "Administrator")
+                {
+                    WorkerFileToolStripMenuItem.Enabled = true;
+                }
+                else
+                {
+                    WorkerFileToolStripMenuItem.Enabled = false;
+                }
+
+            }
+        }
+
+        public string RequestedUser
+        {
+            get { return _requestedUser; }
         }
 
         public string Result
@@ -111,15 +104,16 @@ namespace HRList
 
 
 
-        public string  SelectedName
+        public string SelectedName
         {
 
-            get { return DBView1.CurrentRow.Cells[1].Value.ToString();}
+            get { return DBView1.CurrentRow.Cells[1].Value.ToString(); }
         }
 
         public DataTable Table
         {
             set { DBView1.DataSource = value; }
+            get { return (DataTable)DBView1.DataSource; }
         }
 
         #endregion
@@ -137,6 +131,8 @@ namespace HRList
 
         private void ResultCalculateMenuItem_Click(object sender, EventArgs e)
         {
+            // UserEventArgs arg = new UserEventArgs(lblUserName.Text);
+            _requestedUser = lblUserName.Text;
             ShowResult?.Invoke(this, EventArgs.Empty);
             ResultFormcs resultform = new ResultFormcs
             {
@@ -204,9 +200,6 @@ namespace HRList
             _editUser.Add("Должность: ", _editForm.Position.Text);
             _editUser.Add("Отдел: ", _editForm.Unit.Text);
             _editUser.Add("Группа: ", _editForm.SubUnit.Text);
-           // _editUser.Add("Оклад: ", _editForm.BaseRate);
-           // _editUser.Add("Надбавка за стаж: ", _editForm.BonusExperience);
-           // _editUser.Add("Надбавка за подчиненных: ", _editForm.BonusSubbordinates);
             OnAddUser?.Invoke(this, EventArgs.Empty);
         }
 
@@ -217,10 +210,14 @@ namespace HRList
 
         public void ColumnWidthSetup()
         {
-            DBView1.Columns[1].Width = 300;
-            DBView1.Columns[8].Visible = false;
-            DBView1.Columns[9].Visible = false;
-            DBView1.Columns[10].Visible = false;
+            if (DBView1.Columns.Count != 0)
+            {
+                DBView1.Columns[1].Width = 300;
+                DBView1.Columns[8].Visible = false;
+                DBView1.Columns[9].Visible = false;
+                DBView1.Columns[10].Visible = false;
+            }
+
         }
 
         #endregion
@@ -236,5 +233,32 @@ namespace HRList
 
         #endregion
 
+        private void DBView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            _requestedUser = DBView1["FullName", e.RowIndex].Value.ToString();
+
+            ShowResult?.Invoke(this, EventArgs.Empty);
+            ResultFormcs resultform = new ResultFormcs
+            {
+                StartPosition = FormStartPosition.CenterScreen
+            };
+            resultform.Show();
+            int count = 0;
+            foreach (KeyValuePair<string, string> keyValue in _report)
+            {
+                count = count + 25;
+                Label lbl = new Label
+                {
+                    AutoSize = true,
+                    Text = keyValue.Key + keyValue.Value,
+                    Parent = resultform,
+                    Left = 20,
+                    Top = count,
+                    Visible = true
+                };
+            }
+
+
+        }
     }
 }

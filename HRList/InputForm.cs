@@ -4,15 +4,7 @@ using System.Windows.Forms;
 
 namespace HRList
 {
-    public interface IInputForm
-    {
-        string Login { get; }
-        string Password { get; }
-        void InputFormDispos();
-        void InputFormShowDialog();
-        void InputFormDialogResult();
-        event EventHandler InputButtonClick;
-    }
+
 
     public partial class InputForm : Form, IInputForm
     {

@@ -10,16 +10,7 @@ namespace HRList_BL
     // Необходимо вынести классы для работы с БД в отдельную сборку
     class DBConnect : IDb
     {
-        private DataSet _dataset;
-        private DataTable _table;
-        private DataTable _oldTable;
         SQLQueries _sqlQueries;
-        private DataRow _datarow;
-        private string _activeuser;
-        private string _pass;
-        private string _log;
-        private string filter;
-        private string SqlQuery_rules;
         // Имя отдела.
         private string nameunit;
         // Имя группы.
@@ -29,25 +20,10 @@ namespace HRList_BL
         private SQLiteConnection _dbaseConnection;
         SQLiteDataAdapter _dataAdapter;
 
-        public DataTable Table
-        {
-            get { return _table; }
-            set { _table = value; }
-        }
-
-        public DataTable OldTable
-        {
-            get { return _oldTable; }
-            set { _oldTable = value; }
-        }
-
 
         public DBConnect()
         {
             _sqlQueries = new SQLQueries();
-            _table = new DataTable();
-
-
         }
 
         public void GetSettingsAll(Dictionary<string, string> UnitList, Dictionary<string, string> subUnitList, Dictionary<string, string> positionList, Dictionary<string, string> accessRulesList)
@@ -64,11 +40,10 @@ namespace HRList_BL
         {
             try
             {
-                _table.Clear();
-                _table.Reset();
-                GetData(SQLQueries);
+                DataTable table = new DataTable();
+                GetData(SQLQueries, table);
                 dictionary.Clear();
-                foreach (DataRow row in _table.Rows)
+                foreach (DataRow row in table.Rows)
                 {
                     dictionary.Add(row[1].ToString(), row[0].ToString());
                 }
@@ -81,17 +56,13 @@ namespace HRList_BL
 
 
 
-        public void GetData(string sqlQuery)
+        public void GetData(string sqlQuery, DataTable table)
         {
             try
             {
-                _table.Clear();
-                _table.Reset();
-               // _dataset = new DataSet();
                 ConnectDB(sqlQuery);
-                _dataAdapter.Fill(_table);
+                _dataAdapter.Fill(table);
                // _dbaseConnection.Close();
-                //_table = _dataset.Tables[0];
             }
             catch (Exception)
             {
@@ -100,7 +71,7 @@ namespace HRList_BL
 
         }
 
-        public void SetData(Dictionary<string, string> newUser, Dictionary<string, string> UnitList, Dictionary<string, string> subUnitList, Dictionary<string, string> positionList, Dictionary<string, string> accessRulesList)
+        public void SetData(Dictionary<string, string> newUser, Dictionary<string, string> UnitList, Dictionary<string, string> subUnitList, Dictionary<string, string> positionList, Dictionary<string, string> accessRulesList, DataTable table)
         {
             try
             {
@@ -118,7 +89,7 @@ namespace HRList_BL
                 command.Parameters.AddWithValue("@ID_Subunit", Convert.ToInt32(subUnitList[newUser["Группа: "]]));
                 command.Parameters.AddWithValue("@ID_Access", Convert.ToInt32(accessRulesList[newUser["Должность: "]]));
                 _dataAdapter.InsertCommand = command;
-                _dataAdapter.Update(_table);
+                _dataAdapter.Update(table);
 
                 //_dbaseConnection.Close();
             }
@@ -130,11 +101,6 @@ namespace HRList_BL
             }
         }
 
-        public void GetLastInserID()
-        {
-        }
-
-
         public void ConnectDB(string sqlQuery)
         {
             try
@@ -142,9 +108,6 @@ namespace HRList_BL
                 _dbaseConnection = new SQLiteConnection(_connectionString);
                 _dbaseConnection.Open();
                 _dataAdapter = new SQLiteDataAdapter(sqlQuery, _dbaseConnection);
-
-
-
             }
             catch (Exception)
             {
@@ -156,11 +119,13 @@ namespace HRList_BL
 
         public bool AuthorizationDB(string login, string password,  out string rules, out int idRules)
         {
+
             bool result = false;
             rules = string.Empty;
             idRules = 0;
-            GetData(SQLQueries.Instance.UserListQuery);
-            foreach (DataRow row in _table.Rows)
+            DataTable table = new DataTable();
+            GetData(SQLQueries.Instance.UserListQuery, table);
+            foreach (DataRow row in table.Rows)
             {
                 if (login == row[0].ToString() && password == row[1].ToString())
                 {
@@ -173,16 +138,16 @@ namespace HRList_BL
             return result;
         }
 
-        public void GetUserData(string login, int idRules)
+        public void GetUserData(string login, int idRules, DataTable table)
         {
-            GetData(SQLQueries.Instance.GeneralQuery);
-            foreach (DataRow row in _table.Rows)
+            GetData(SQLQueries.Instance.GeneralQuery, table);
+            foreach (DataRow row in table.Rows)
             {
                 if (login == row[1].ToString())
                 {
                     nameunit = row[4].ToString();
                     namesubunit = row[5].ToString();
-                    _table.DefaultView.RowFilter = SQLQueries.Instance.UserRulesFilterCreate(idRules, login, nameunit, namesubunit);
+                    table.DefaultView.RowFilter = SQLQueries.Instance.UserRulesFilterCreate(idRules, login, nameunit, namesubunit);
                     break;
                 }
             }

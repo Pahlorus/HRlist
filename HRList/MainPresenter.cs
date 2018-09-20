@@ -10,8 +10,8 @@ namespace HRList
         private readonly IInputForm _iform;
         private readonly IMessageService _mservice;
         private readonly IHRBuisnessLogic _buisnesslogic;
-    
-        public MainPresenter (IMainForm mainform, IInputForm iform, IMessageService mservice, IHRBuisnessLogic buisnesslogic)
+
+        public MainPresenter(IMainForm mainform, IInputForm iform, IMessageService mservice, IHRBuisnessLogic buisnesslogic)
         {
             _mainform = mainform;
             _iform = iform;
@@ -34,8 +34,10 @@ namespace HRList
 
         private void _mainform_ShowResult(object sender, EventArgs e)
         {
-            _mainform.Report = _buisnesslogic.ReportCreate(_buisnesslogic.ActiveUser, _buisnesslogic.Table);
-            // _mainform.Result = _buisnesslogic.Worker.Experience.ToString();
+            IMainForm name = (IMainForm)sender;
+
+            _mainform.Report = _buisnesslogic.ReportCreate(name.RequestedUser, _buisnesslogic.Table);
+
         }
 
         private void _buisnesslogic_Message(object sender, EventArgs e)
@@ -46,18 +48,21 @@ namespace HRList
 
         private void _mainform_InputBDMenuClick(object sender, EventArgs e)
         {
+            _buisnesslogic.UserOutput();
+            _mainform.SetActiveUser = "Вход не выполнен";
+            _mainform.SetRulesUser = string.Empty;
             _iform.InputFormShowDialog();
         }
         private void _mainform_OutputBDMenuClick(object sender, EventArgs e)
         {
             _buisnesslogic.UserOutput();
-            _mainform.Table= _buisnesslogic.Table;
             _mainform.SetActiveUser = "Вход не выполнен";
             _mainform.SetRulesUser = string.Empty;
         }
 
         private void _iform_InputButtonClick(object sender, EventArgs e)
         {
+
             _buisnesslogic.UserInput(_iform.Login, _iform.Password);
             _buisnesslogic.GetUserList();
             _mainform.Table = _buisnesslogic.Table;
@@ -67,7 +72,7 @@ namespace HRList
             if (!String.IsNullOrEmpty(_buisnesslogic.ActiveUser)) _iform.InputFormDialogResult();
         }
 
-        private void _mainform_FormShown(object sender, EventArgs e) 
+        private void _mainform_FormShown(object sender, EventArgs e)
         {
             _buisnesslogic.GetSettings();
             _mainform.UnitList = _buisnesslogic.UnitList;

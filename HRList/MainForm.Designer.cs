@@ -35,13 +35,14 @@
             this.InputBDMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.WorkerFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ResultCalculateMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.OutputDBMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.настройкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.базаДанныхToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.оПрограммеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ExpirienceBox = new System.Windows.Forms.TextBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblUserName = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lblUserRules = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.DBView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -52,7 +53,7 @@
             this.DBView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.DBView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.DBView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -84,7 +85,8 @@
             this.ToolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.InputBDMenuItem,
             this.WorkerFileToolStripMenuItem,
-            this.ResultCalculateMenuItem});
+            this.ResultCalculateMenuItem,
+            this.OutputDBMenuItem});
             this.ToolsToolStripMenuItem.Name = "ToolsToolStripMenuItem";
             this.ToolsToolStripMenuItem.Size = new System.Drawing.Size(95, 20);
             this.ToolsToolStripMenuItem.Text = "Инструменты";
@@ -92,20 +94,29 @@
             // InputBDMenuItem
             // 
             this.InputBDMenuItem.Name = "InputBDMenuItem";
-            this.InputBDMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.InputBDMenuItem.Size = new System.Drawing.Size(187, 22);
             this.InputBDMenuItem.Text = "Вход в БД";
             // 
             // WorkerFileToolStripMenuItem
             // 
             this.WorkerFileToolStripMenuItem.Name = "WorkerFileToolStripMenuItem";
-            this.WorkerFileToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
-            this.WorkerFileToolStripMenuItem.Text = "Карточка работника";
+            this.WorkerFileToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.WorkerFileToolStripMenuItem.Text = "Добавить работника";
+            this.WorkerFileToolStripMenuItem.Click += new System.EventHandler(this.WorkerFileToolStripMenuItem_Click);
             // 
             // ResultCalculateMenuItem
             // 
             this.ResultCalculateMenuItem.Name = "ResultCalculateMenuItem";
-            this.ResultCalculateMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.ResultCalculateMenuItem.Size = new System.Drawing.Size(187, 22);
             this.ResultCalculateMenuItem.Text = "Расчет зарплаты";
+            this.ResultCalculateMenuItem.Click += new System.EventHandler(this.ResultCalculateMenuItem_Click);
+            // 
+            // OutputDBMenuItem
+            // 
+            this.OutputDBMenuItem.Name = "OutputDBMenuItem";
+            this.OutputDBMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.OutputDBMenuItem.Text = "Выход";
+            this.OutputDBMenuItem.Click += new System.EventHandler(this.OutputDBMenuItem_Click);
             // 
             // настройкиToolStripMenuItem
             // 
@@ -118,7 +129,7 @@
             // базаДанныхToolStripMenuItem
             // 
             this.базаДанныхToolStripMenuItem.Name = "базаДанныхToolStripMenuItem";
-            this.базаДанныхToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.базаДанныхToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.базаДанныхToolStripMenuItem.Text = "База данных";
             // 
             // оПрограммеToolStripMenuItem
@@ -127,18 +138,12 @@
             this.оПрограммеToolStripMenuItem.Size = new System.Drawing.Size(94, 20);
             this.оПрограммеToolStripMenuItem.Text = "О программе";
             // 
-            // ExpirienceBox
-            // 
-            this.ExpirienceBox.Location = new System.Drawing.Point(802, 4);
-            this.ExpirienceBox.Name = "ExpirienceBox";
-            this.ExpirienceBox.Size = new System.Drawing.Size(74, 20);
-            this.ExpirienceBox.TabIndex = 3;
-            // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
-            this.lblUserName});
+            this.lblUserName,
+            this.lblUserRules});
             this.statusStrip1.Location = new System.Drawing.Point(0, 478);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(1276, 22);
@@ -156,13 +161,17 @@
             this.lblUserName.Name = "lblUserName";
             this.lblUserName.Size = new System.Drawing.Size(0, 17);
             // 
+            // lblUserRules
+            // 
+            this.lblUserRules.Name = "lblUserRules";
+            this.lblUserRules.Size = new System.Drawing.Size(0, 17);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1276, 500);
             this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.ExpirienceBox);
             this.Controls.Add(this.DBView1);
             this.Controls.Add(this.menuStrip1);
             this.Name = "MainForm";
@@ -187,13 +196,14 @@
         private System.Windows.Forms.ToolStripMenuItem оПрограммеToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ToolsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem InputBDMenuItem;
-        private System.Windows.Forms.TextBox ExpirienceBox;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripStatusLabel lblUserName;
         private System.Windows.Forms.ToolStripMenuItem WorkerFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ResultCalculateMenuItem;
         private System.Windows.Forms.ToolStripMenuItem базаДанныхToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem OutputDBMenuItem;
+        private System.Windows.Forms.ToolStripStatusLabel lblUserRules;
     }
 }
 

@@ -1,36 +1,25 @@
 ﻿using System;
 using System.Data;
+using System.Collections.Generic;
 
 
 namespace HRList_BL
 {
-    public interface IHRBuisnessLogic
+    public class HRBuisnessLogic : IHRBuisnessLogic
     {
-        string Login { set; }
-        string Password { set; }
-        string ActiveUser { get; }
-        string Rules { get; }
-        string Salary { get; }
-        DataTable Set { get; }
-        event EventHandler Message;
-        void InputDB();
-        string SalaryCalculation();
-    }
-
-    public class HRBuisnessLogic: IHRBuisnessLogic
-    {
-    
         #region Fields
-       
+
         // Пользователь входящий в систему.
-        private string activeuser;
+        private string _activeUser;
+        private string _rulesUser;
+        private bool _isInputSuccessful;
         // зарплата.
-        private string salary; 
-        private string pass;
-        private string log;
+        private string salary;
+        private string _password;
+        private string _login;
         // Права в БД.
-        private string rules;
-        private string filter; 
+        private int _idRules;
+        private string filter;
         private string SqlQuery_rules;
         // Поле руководитель в БД.
         private string supervisor;
@@ -38,10 +27,18 @@ namespace HRList_BL
         private string nameunit;
         // Имя группы.
         private string namesubunit;
-        private DataTable set;
+        private DataTable _table;
         private CountingModul _countingModul;
         private HRModul _hrModul;
         private SQLQueries _sqlQueries;
+        DBConnect _dbExemplar;
+        private Worker _worker;
+        private Dictionary<string, string> _unitList;
+        private Dictionary<string, string> _subUnitList;
+        private Dictionary<string, string> _positionList;
+        private Dictionary<string, string> _accessRulesList;
+
+
         #endregion
 
         public HRBuisnessLogic()
@@ -49,29 +46,41 @@ namespace HRList_BL
             _countingModul = new CountingModul();
             _hrModul = new HRModul();
             _sqlQueries = new SQLQueries();
+            _dbExemplar = new DBConnect();
+            _unitList = new Dictionary<string, string>();
+            _subUnitList = new Dictionary<string, string>();
+            _positionList = new Dictionary<string, string>();
+            _accessRulesList = new Dictionary<string, string>();
 
-        }
+    }
 
         #region Properties
 
         public string Login
         {
-            set { log = value; }
+            set { _login = value; }
         }
 
         public string Password
         {
-            set { pass = value; }
+            set { _password = value; }
         }
 
         public string ActiveUser
         {
-            get { return activeuser; }
+            get { return _activeUser; }
         }
 
-        public string Rules
+        public string RulesUser
         {
-            get { return rules; }
+            get { return _rulesUser; }
+        }
+
+
+
+        public int IdRules
+        {
+            get { return _idRules; }
         }
 
         public string Salary
@@ -79,90 +88,151 @@ namespace HRList_BL
             get { return salary; }
         }
 
-        public DataTable Set
+        public DataTable Table
         {
-            get { return set; }
+            get { return _table; }
         }
+
+        public Dictionary<string, string> UnitList
+        {
+            get { return _unitList; }
+            set { _unitList = value; }
+        }
+
+        public Dictionary<string, string> SubUnitList
+        {
+            get { return _subUnitList; }
+            set { _subUnitList = value; }
+        }
+
+
+        public Dictionary<string, string> PositiontList
+        {
+            get { return _positionList; }
+            set { _positionList = value; }
+        }
+
+        public Dictionary<string, string> AccessRulesList
+        {
+            get { return _accessRulesList; }
+            set { _accessRulesList = value; }
+        }
+
 
         #endregion
 
-        #region Methods
-        public string SalaryCalculation()
+
+        public void SalaryCalculation()
         {
-            DBConnect DBexemp = new DBConnect();
-            string SqlQuery = SQLQueries.Instance.GeneralQuery;
-            DBexemp.ConnectToDB(SqlQuery);
-            DataSet ds = DBexemp.DataSet;
-            Worker worker = new Worker();
-            double salary_1 = _countingModul.BaseSalary(activeuser, ds) + _countingModul.BonusExperience(activeuser, ds) + _countingModul.BonusSubbordinates(activeuser, ds);
-            salary = salary_1.ToString();
-            return salary;
+          //  _worker.Experience = _countingModul.Experience(_activeUser, Table);
+
+          //  double salary_1 = _countingModul.BaseSalary(_activeUser, ds) + _countingModul.BonusExperience(_activeUser, ds) + _countingModul.BonusSubbordinates(_activeUser, ds);
+
+
         }
 
-        // Авторизация в БД.
-        public void InputDB() 
+        public Dictionary<string, string> ReportCreate(string name, DataTable table)
         {
-            activeuser = "";
-            DBConnect DBexemp = new DBConnect();
-            string SqlQuery_input = SQLQueries.Instance.InputQuery;
-            DBexemp.ConnectToDB(SqlQuery_input);
-            foreach (DataRow row in DBexemp.DataSet.Tables[0].Rows)
+            Worker workerCard = new Worker(name);
+            string filter = string.Format("FullName='{0}'", name);
+            DataRow[] rows = table.Select(filter);
+            workerCard.OfficePosition = rows[0].Field<String>("Position");
+            workerCard.StartTime = rows[0].Field<DateTime>("DataStart");
+            workerCard.Experience = _countingModul.Experience(name, table);
+            workerCard.CountSubbordinates = _countingModul.CountSubordinates(name, table);
+            workerCard.BaseRate = rows[0].Field<Double>("BaseSalary");
+            workerCard.BonusPercent_1 = rows[0].Field<Double>("BonusRate_1");
+            workerCard.BonusPercent_2 = rows[0].Field<Double>("BonusRate_2");
+
+            Dictionary<string, string> report = new Dictionary<string, string>();
+            report.Add("ФИО Работника: ", workerCard.Name);
+            report.Add("Должность: ", workerCard.OfficePosition);
+            report.Add("Количество подчиненых: ", workerCard.CountSubbordinates.ToString());
+            report.Add("Стаж, лет: ", workerCard.Experience.ToString());
+            report.Add("Оклад, " + rows[0].Field<String>("CurrencyCode")+": ", workerCard.BaseRate.ToString());
+            report.Add("Надбавка за стаж, %: ", workerCard.BonusPercent_1.ToString());
+            report.Add("Надбавка за подчиненных, %: ", workerCard.BonusPercent_2.ToString());
+            report.Add("Заработная плата, начисленная, " + rows[0].Field<String>("CurrencyCode") + ": ", (_countingModul.BaseSalary(name, table) + _countingModul.BonusExperience(name, table) + _countingModul.BonusSubbordinates(name, table)).ToString());
+            return report;
+        }
+
+
+        public void NewUserCreate(Dictionary<string, string> newUser, DataTable table)
+        {
+            DataRow row = table.NewRow();
+            row["FullName"] = newUser["ФИО Работника: "];
+            row["Supervisor"] = Convert.ToBoolean(newUser["Начальник: "]);
+            row["Position"] = newUser["Должность: "];
+            row["Name_Unit"] = newUser["Отдел: "];
+            row["Name_SubUnit"] = newUser["Группа: "];
+            //row["BaseSalary"] = Convert.ToDouble(newUser["Оклад: "]);
+           // row["CurrencyCode"] = "$";
+            row["DataStart"] = DateTime.Today;
+           // row["BonusRate_1"] = Convert.ToDouble(newUser["Надбавка за стаж: "]);
+            //row["BonusRate_2"] = Convert.ToDouble(newUser["Надбавка за подчиненных: "]);
+            //row["ExpBonusLimit"] = 30;
+            table.Rows.Add(row);
+            _dbExemplar.Table = table;
+            _dbExemplar.SetData(newUser, _unitList, _subUnitList, _positionList, _accessRulesList);
+            _dbExemplar.GetUserData(_login, IdRules);
+        }
+
+
+
+
+
+
+
+        public void GetSettings()
+        {
+            _dbExemplar.GetSettingsAll(_unitList, _subUnitList, _positionList, _accessRulesList);
+        }
+
+
+
+
+
+
+        public void UserInput(string login, string password)
+        {
+            string rulesUser;
+            int  idRules;
+            if (_dbExemplar.AuthorizationDB(login, password, out rulesUser, out idRules))
             {
-                if (log == row[1].ToString() && pass == row[2].ToString())
-                {
-                    activeuser = log;
-                    rules = row[7].ToString();
-                    supervisor = row[3].ToString();
-                    nameunit = row[5].ToString();
-                    namesubunit = row[6].ToString();
-                    switch (rules)
-                    {
-                        case "Employee":
-                            {
-                                SqlQuery_rules = SQLQueries.Instance.EmployeeAccessRules;
-                                filter = string.Format("[FullName]='{0}'", log);
-                            }
-                            break;
-                        case "Manager":
-                            {
-                                SqlQuery_rules = SQLQueries.Instance.ManagerAccessRules;
-                                filter = string.Format("[Name_Unit]='{0}' AND [Name_SubUnit]='{1}'", nameunit, namesubunit);
-                            }
-                            break;
-                        case "Salesman":
-                            {
-                                SqlQuery_rules = SQLQueries.Instance.SalesmanAccessRules;
-                                filter = string.Format("[Name_Unit]='{0}'", nameunit);
-                            }
-                            break;
-                        case "HR_Manager":
-                            {
-                                SqlQuery_rules = SQLQueries.Instance.HRManagerAccessRules;
-                                filter = string.Empty;
-                            }
-                            break;
-                        case "Administrator":
-                            {
-                                SqlQuery_rules = SQLQueries.Instance.AdministratorAccessRules;
-                                filter = string.Empty;
-                            }
-                            break;
-                        default:
-                            {
-                                SqlQuery_rules = "";
-                                filter = "";
-                            }
-                            break;
-                    }
-                    DBexemp.ConnectToDB(SqlQuery_rules);
-                    DBexemp.DataSet.Tables[0].DefaultView.RowFilter = filter;
-                    set = DBexemp.DataSet.Tables[0];
-                    break;
-                }
+                _login = login;
+                _password = password;
+                _activeUser = login;
+                _rulesUser = rulesUser;
+                _idRules = idRules;
+                _isInputSuccessful = true;
             }
-            if (activeuser == "") Message(this, EventArgs.Empty);
+            else
+            {
+                Message(this, EventArgs.Empty);
+            }
         }
-        #endregion
+        public void UserOutput()
+        {
+            _login = string.Empty;
+            _password = string.Empty;
+            _table.Clear();
+            _isInputSuccessful = false;
+            _activeUser = "Вход не выполнен";
+        }
+
+        public void GetUserList() 
+        {
+            if (_isInputSuccessful)
+            {
+                _dbExemplar.GetUserData(_login,IdRules);
+                _table = _dbExemplar.Table;
+            }
+     
+        }
+
+
+
+
 
         #region Events
         public event EventHandler Message;

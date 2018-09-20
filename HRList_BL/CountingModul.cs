@@ -77,44 +77,43 @@ namespace HRList_BL
         #endregion
 
         #region Methods
-        // Вычисление стажа.
-        public int Experience(string Name, DataSet ds)
+        public int Experience(string Name, DataTable table)
         {
-            string filter = string.Format("FullName='{0}'", Name);
-
-            ds.Tables[0].Select(filter);
-            startTime = ds.Tables[0].Rows[0].Field<DateTime>("DataStart");
+            string filter = string.Format("FullName= '{0}'", Name);
+            DataRow[] rows = table.Select(filter);
+            startTime = rows[0].Field<DateTime>("DataStart");
             experience = Convert.ToInt32((DateTime.Today.Year - startTime.Year).ToString(), 10);
             return experience;
         }
 
-        // Вычисление количества подчиненных.
-        public int CountSubordinates(string Name, DataSet ds)
+        public int CountSubordinates(string Name, DataTable table)
         {
-            int count_div = 0;//количество сотрудников в отделе
-            int count_gr = 0;//количество сотрудников в группе
-            int count_s;
+            // Количество сотрудников в отделе.
+            int countDivision = 0;
+            // Количество сотрудников в группе.
+            int countGroup = 0;
+            int countSubbordinates;
             string filter = string.Format("FullName='{0}'", Name);
-            DataRow[] row = ds.Tables[0].Select(filter);
+            DataRow[] row = table.Select(filter);
             bool supervisor = row[0].Field<Boolean>("Supervisor");
             string name_unit = row[0].Field<String>("Name_Unit");
             string name_subunit = row[0].Field<String>("Name_SubUnit");
-            DataColumnCollection columns = ds.Tables[0].Columns;
+            DataColumnCollection columns = table.Columns;
 
-            if (!supervisor) count_s = 0;//условие employee
+            if (!supervisor) countSubbordinates = 0;
             else
             {
                 string filter_2 = string.Format("Name_Unit='{0}'", name_unit);
-                DataRow[] row1 = ds.Tables[0].Select(filter_2);
+                DataRow[] row1 = table.Select(filter_2);
 
                 if (supervisor && String.IsNullOrEmpty(name_subunit)) // условие начальника отдела (saleman)
                 {
                     foreach (DataRow line in row1)
                     {
 
-                        if (line[columns.IndexOf("Name_Unit")].ToString() == name_unit) count_div = count_div + 1;
+                        if (line[columns.IndexOf("Name_Unit")].ToString() == name_unit) countDivision = countDivision + 1;
                     }
-                    count_s = count_div - 1;
+                    countSubbordinates = countDivision - 1;
                 }
 
                 else // условие начальника группы  (manager)
@@ -122,55 +121,54 @@ namespace HRList_BL
                     foreach (DataRow line in row1)
                     {
 
-                        if (line[columns.IndexOf("Name_Unit")].ToString() == name_unit && line[columns.IndexOf("Name_SubUnit")].ToString() == name_subunit) count_gr = count_gr + 1;
+                        if (line[columns.IndexOf("Name_Unit")].ToString() == name_unit && line[columns.IndexOf("Name_SubUnit")].ToString() == name_subunit) countGroup = countGroup + 1;
                     }
 
-                    count_s = count_gr - 1;
+                    countSubbordinates = countGroup - 1;
                 }
             }
-            return count_s;
+            return countSubbordinates;
         }
 
         // Получение количества отработанных дней (Из табеля или указывается вручную).
-        public int Tabel()
+        public int GetTabel()
         {
-            int Count = 21;// функция не реализована принимается стандартное значение
+            // функция не реализована принимается стандартное значение 1, т.е. отработан полный месяц
+            int Count = 1;
             return Count;
         }
 
         // Вычисление надбавки менеджера за подчиненных.
-        public double BonusManagerSubbordinates(string Name, DataSet ds)
+        public double BonusManagerSubbordinates(string Name, DataTable table)
         {
             double bonus_s = 0;
             string filter = string.Format("FullName='{0}'", Name);
-            DataRow[] row = ds.Tables[0].Select(filter);
+            DataRow[] row = table.Select(filter);
             bool supervisor = row[0].Field<Boolean>("Supervisor");
             string name_unit = row[0].Field<String>("Name_Unit");
             string name_subunit = row[0].Field<String>("Name_SubUnit");
-            DataColumnCollection columns = ds.Tables[0].Columns;
+            DataColumnCollection columns = table.Columns;
             string filter_2 = string.Format("Name_Unit='{0}'", name_unit);
-            DataRow[] row1 = ds.Tables[0].Select(filter_2);
+            DataRow[] row1 = table.Select(filter_2);
             foreach (DataRow line in row1)
             {
 
                 if (line[columns.IndexOf("Supervisor")].ToString() != "True" && line[columns.IndexOf("Name_Unit")].ToString() == name_unit && line[columns.IndexOf("Name_SubUnit")].ToString() == name_subunit)
-                    bonus_s = bonus_s + BaseSalary(line[columns.IndexOf("FullName")].ToString(), ds) + BonusExperience(line[columns.IndexOf("FullName")].ToString(), ds); ;
+                    bonus_s = bonus_s + BaseSalary(line[columns.IndexOf("FullName")].ToString(), table) + BonusExperience(line[columns.IndexOf("FullName")].ToString(), table); ;
             }
-
             return bonus_s;
         }
 
         // Вычисление бонуса за подчиненных.
-        public double BonusSubbordinates(string Name, DataSet ds)
-
+        public double BonusSubbordinates(string Name, DataTable table)
         {
             double bonus_s = 0;
             string filter = string.Format("FullName='{0}'", Name);
-            DataRow[] row = ds.Tables[0].Select(filter);
+            DataRow[] row = table.Select(filter);
             bool supervisor = row[0].Field<Boolean>("Supervisor");
             string name_unit = row[0].Field<String>("Name_Unit");
             string name_subunit = row[0].Field<String>("Name_SubUnit");
-            DataColumnCollection columns = ds.Tables[0].Columns;
+            DataColumnCollection columns = table.Columns;
             double bonusrate = row[0].Field<Double>("BonusRate_2");
 
             if (!supervisor)
@@ -181,7 +179,7 @@ namespace HRList_BL
             else
             {
                 string filter_2 = string.Format("Name_Unit='{0}'", name_unit);
-                DataRow[] row1 = ds.Tables[0].Select(filter_2);
+                DataRow[] row1 = table.Select(filter_2);
 
 
                 double bonus_s1 = 0;
@@ -192,14 +190,14 @@ namespace HRList_BL
                 {
 
                     if (line[columns.IndexOf("Supervisor")].ToString() != "True" && line[columns.IndexOf("Name_Unit")].ToString() == name_unit && !String.IsNullOrEmpty(line[columns.IndexOf("Name_SubUnit")].ToString()))
-                        bonus_s1 = bonus_s1 + BaseSalary(line[columns.IndexOf("FullName")].ToString(), ds) + BonusExperience(line[columns.IndexOf("FullName")].ToString(), ds);
+                        bonus_s1 = bonus_s1 + BaseSalary(line[columns.IndexOf("FullName")].ToString(), table) + BonusExperience(line[columns.IndexOf("FullName")].ToString(), table);
                 }
 
                 foreach (DataRow line in row1)//сумма зарплат employee в группе
                 {
 
                     if (line[columns.IndexOf("Supervisor")].ToString() != "True" && line[columns.IndexOf("Name_Unit")].ToString() == name_unit && line[columns.IndexOf("Name_SubUnit")].ToString() == name_subunit)
-                        bonus_s2 = bonus_s2 + BaseSalary(line[columns.IndexOf("FullName")].ToString(), ds) + BonusExperience(line[columns.IndexOf("FullName")].ToString(), ds); ;
+                        bonus_s2 = bonus_s2 + BaseSalary(line[columns.IndexOf("FullName")].ToString(), table) + BonusExperience(line[columns.IndexOf("FullName")].ToString(), table); ;
                 }
 
 
@@ -208,7 +206,7 @@ namespace HRList_BL
 
                     if (line[columns.IndexOf("Supervisor")].ToString() == "True" && line[columns.IndexOf("Name_Unit")].ToString() == name_unit && !String.IsNullOrEmpty(line[columns.IndexOf("Name_SubUnit")].ToString()))
 
-                        bonus_s3 = bonus_s3 + BaseSalary(line[columns.IndexOf("FullName")].ToString(), ds) + BonusExperience(line[columns.IndexOf("FullName")].ToString(), ds) + BonusManagerSubbordinates(Name, ds);
+                        bonus_s3 = bonus_s3 + BaseSalary(line[columns.IndexOf("FullName")].ToString(), table) + BonusExperience(line[columns.IndexOf("FullName")].ToString(), table) + BonusManagerSubbordinates(Name, table);
                 }
 
 
@@ -230,35 +228,28 @@ namespace HRList_BL
         }
 
         // Вычисление базовой зарплаты.
-        public double BaseSalary(string Name, DataSet ds)
+        public double BaseSalary(string Name, DataTable table)
         {
-
             string filter = string.Format("FullName='{0}'", Name);
-            DataRow[] row = ds.Tables[0].Select(filter);
-            double basesalary = row[0].Field<Double>("BaseSalary") * Tabel();
-
-
+            DataRow[] row = table.Select(filter);
+            double basesalary = row[0].Field<Double>("BaseSalary") * GetTabel();
             return basesalary;
-
         }
 
         // Вычисление бонуса за стаж.
-        public double BonusExperience(string Name, DataSet ds)
+        public double BonusExperience(string Name, DataTable table)
         {
-
             string filter = string.Format("FullName='{0}'", Name);
-            DataRow[] row = ds.Tables[0].Select(filter);
+            DataRow[] row = table.Select(filter);
             double bonusrate = row[0].Field<Double>("BonusRate_1");
             double bonuslimit = row[0].Field<Double>("ExpBonusLimit");
 
-            double bonus_e = (BaseSalary(Name, ds) / 100) * bonusrate * Experience(Name, ds);
+            double bonus_e = (BaseSalary(Name, table) / 100) * bonusrate * Experience(Name, table);
             if (bonus_e >= bonuslimit)
             {
-                bonus_e = (BaseSalary(Name, ds) / 100) * bonusrate;
+                bonus_e = (BaseSalary(Name, table) / 100) * bonusrate;
             }
-
             return bonus_e;
-
         }
         #endregion
     }

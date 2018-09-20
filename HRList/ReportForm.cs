@@ -16,14 +16,5 @@ namespace HRList
         {
             InitializeComponent();
         }
-
-        public string res;
-        public string name;
-
-        private void ResultFormcs_Shown(object sender, EventArgs e)
-        {
-            lblResult.Text = res;
-            lblName.Text = name;
-        }
     }
 }

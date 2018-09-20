@@ -10,37 +10,28 @@ namespace HRList_BL
     // или формирование инструмента для редактирования запросов без перекомпилирования.
     class SQLQueries
     {
-        private string _generalQuery = @"SELECT p.ID_Human, p.FullName, p.DataStart, p.PersonalBonus, p.Supervisor, s1.Position, s1.BaseSalary, s1.CurrencyCode, s1.BonusRate_1, s1.BonusRate_2, s1.ExpBonusLimit, u.Name_Unit, s2.Name_SubUnit
-                                    FROM PrivateList p 
-	                                INNER JOIN Staff s ON ( p.ID_Human = s.ID_Human)  
-		                            INNER JOIN StaffRules s1 ON ( s.ID_Position = s1.ID_Position)  
-                                    INNER JOIN Unit u ON ( s.ID_Unit = u.ID_Unit)  
-                                    INNER JOIN SubUnit s2 ON ( s.ID_SubUnit = s2.ID_SubUnit  )";
+        private string _generalQuery = @"SELECT  s.id_human, s.fullname, s.supervisor, s2.position, u.name_unit, s3.name_subunit, s2.basesalary, s2.currencycode, s.DataStart, s2.bonusrate_1, s2.bonusrate_2, s2.expbonuslimit
+                                    FROM  StaffList s, StaffRules s2, SubUnit s3, Unit u, Access_Rights a
+                                    WHERE s.id_position=s2.id_position AND s.id_subunit=s3.id_subunit AND s.id_unit=u.id_unit AND a.id_access=s.id_access";
 
-        private string _inputQuery = @"SELECT  p.id_human, p.fullname, p.password, p.supervisor, s2.position, u.name_unit, s3.name_subunit, a.rules
-                                    FROM  privatelist p, staff s, staffrules s2, subunit s3, unit u, access_rights a
-                                    WHERE  p.id_human=s.id_human AND s.id_position=s2.id_position AND s.id_subunit=s3.id_subunit AND s.id_unit=u.id_unit AND a.id_access=s.id_access";
-
-        private string _employeeAccessRules = @"SELECT  p.id_human, p.fullname, p.supervisor, s2.position, u.name_unit, s3.name_subunit
-                                            FROM  privatelist p, staff s, staffrules s2, subunit s3, unit u, access_rights a
-                                            WHERE  p.id_human=s.id_human AND s.id_position=s2.id_position AND s.id_subunit=s3.id_subunit AND s.id_unit=u.id_unit AND a.id_access=s.id_access";
-
-        private string _managerAccessRules =  @"SELECT  p.id_human, p.fullname, p.supervisor, s2.position, u.name_unit, s3.name_subunit, s2.basesalary, s2.currencycode
-                                             FROM  privatelist p, staff s, staffrules s2, subunit s3, unit u, access_rights a
-                                             WHERE  p.id_human=s.id_human AND s.id_position=s2.id_position AND s.id_subunit=s3.id_subunit AND s.id_unit=u.id_unit AND a.id_access=s.id_access";
+        private string _userListQuery = @"SELECT s.FullName, s.Password, s.ID_Access, a.Rules
+                                    FROM  StaffList s, Access_Rights a
+                                    WHERE a.ID_Access=s.ID_Access";
 
 
-        private string _salesmanAccessRules = @"SELECT  p.id_human, p.fullname, p.supervisor, s2.position, u.name_unit, s3.name_subunit, s2.basesalary, s2.currencycode, s2.bonusrate_1, s2.bonusrate_2, s2.expbonuslimit
-                                            FROM  privatelist p, staff s, staffrules s2, subunit s3, unit u, access_rights a
-                                            WHERE  p.id_human=s.id_human AND s.id_position=s2.id_position AND s.id_subunit=s3.id_subunit AND s.id_unit=u.id_unit AND a.id_access=s.id_access";
+        private string _subunitQuery = @"SELECT s2.ID_SubUnit, s2.Name_SubUnit
+                                        FROM   SubUnit s2";
 
-        private string _hrmanagerAccessRules = @"SELECT  p.id_human, p.fullname, p.supervisor, s2.position, u.name_unit, s3.name_subunit, s2.basesalary, s2.currencycode, s2.bonusrate_1, s2.bonusrate_2, s2.expbonuslimit
-                                            FROM  privatelist p, staff s, staffrules s2, subunit s3, unit u, access_rights a
-                                            WHERE  p.id_human=s.id_human AND s.id_position=s2.id_position AND s.id_subunit=s3.id_subunit AND s.id_unit=u.id_unit AND a.id_access=s.id_access";
+        private string _unitQuery = @"SELECT  u.ID_Unit, u.Name_Unit
+                                    FROM   Unit u";
 
-        private string _administratorAccessRules = @"SELECT  p.id_human, p.fullname, p.supervisor, s2.position, u.name_unit, s3.name_subunit, s2.basesalary, s2.currencycode, s2.bonusrate_1, s2.bonusrate_2, s2.expbonuslimit
-                                                FROM  privatelist p, staff s, staffrules s2, subunit s3, unit u, access_rights a
-                                                WHERE  p.id_human=s.id_human AND s.id_position=s2.id_position AND s.id_subunit=s3.id_subunit AND s.id_unit=u.id_unit AND a.id_access=s.id_access";
+        private string _accessRulesQuery = @"SELECT  a.ID_Access, a.Rules
+                                           FROM   Access_Rights a";
+
+        private string _positionQuery = @"SELECT  s2.ID_Position, s2.Position
+                                        FROM   StaffRules s2";
+
+
 
         public static SQLQueries Instance
         {
@@ -50,7 +41,9 @@ namespace HRList_BL
 
         public SQLQueries()
         {
+
             Instance = this;
+
         }
 
         #region Properties
@@ -60,39 +53,75 @@ namespace HRList_BL
             get { return _generalQuery; }
         }
 
-        public string InputQuery
+        public string UserListQuery
         {
-            get { return _inputQuery; }
+            get { return _userListQuery; }
         }
 
-        public string EmployeeAccessRules
+
+        public string SubunitQuery
         {
-            get { return _employeeAccessRules; }
+            get { return _subunitQuery; }
         }
 
-        public string ManagerAccessRules
+        public string UnitQuery
         {
-            get { return _managerAccessRules; }
+            get { return _unitQuery; }
         }
 
-        public string SalesmanAccessRules
+        public string AccessRulesQuery
         {
-            get { return _salesmanAccessRules; }
+            get { return _accessRulesQuery; }
         }
 
-        public string HRManagerAccessRules
+        public string PositionQuery
         {
-            get { return _hrmanagerAccessRules; }
+            get { return _positionQuery; }
         }
 
-        public string AdministratorAccessRules
-        {
-            get { return _administratorAccessRules; }
-        }
         #endregion
 
+        public string UserRulesFilterCreate(int idRule, string login, string nameunit, string namesubunit)
+        {
+            string filter;
+            switch (idRule)
+            {
+                case 1:
+                    {
+                        filter = string.Format("[FullName]='{0}'", login);
+                    }
+                    break;
+                case 2:
+                    {
+                        filter = string.Format("[Name_Unit]='{0}' AND [Name_SubUnit]='{1}'", nameunit, namesubunit);
+                    }
+                    break;
+                case 3:
+                    {
+                        filter = string.Format("[Name_Unit]='{0}'", nameunit);
+                    }
+                    break;
+                case 4:
+                    {
+                        filter = string.Empty;
+                    }
+                    break;
+                case 5:
+                    {
 
+                        filter = string.Empty;
+                    }
+                    break;
+                default:
+                    {
+                        filter = "";
+                    }
+                    break;
 
+            }
+
+            return filter;
+        }
 
     }
 }

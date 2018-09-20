@@ -97,15 +97,18 @@ namespace HRList_BL
 
         public Dictionary<string, string> ReportCreate(string name, DataTable table)
         {
+            string filter = string.Format("FullName='{0}'", name);
+            DataRow[] row = table.Select(filter);
+
             Dictionary<string, string> report = new Dictionary<string, string>();
             report.Add("ФИО Работника: ", name);
-            report.Add("Должность: ", table.Rows[0].Field<String>("Position"));
+            report.Add("Должность: ", row[0].Field<String>("Position"));
             report.Add("Количество подчиненых: ", _countingModul.CountSubordinates(name, table).ToString());
             report.Add("Стаж, лет: ", _countingModul.Experience(name, table).ToString());
-            report.Add("Оклад, " + table.Rows[0].Field<String>("CurrencyCode") + ": ", table.Rows[0].Field<Double>("BaseSalary").ToString());
-            report.Add("Надбавка за стаж, %: ", table.Rows[0].Field<Double>("BonusRate_1").ToString());
-            report.Add("Надбавка за подчиненных, %: ", table.Rows[0].Field<Double>("BonusRate_2").ToString());
-            report.Add("Заработная плата, начисленная, " + table.Rows[0].Field<String>("CurrencyCode") + ": ", (_countingModul.SalaryCalculation(name, table)).ToString());
+            report.Add("Оклад, " + row[0].Field<String>("CurrencyCode") + ": ", row[0].Field<Double>("BaseSalary").ToString());
+            report.Add("Надбавка за стаж, %: ", row[0].Field<Double>("BonusRate_1").ToString());
+            report.Add("Надбавка за подчиненных, %: ", row[0].Field<Double>("BonusRate_2").ToString());
+            report.Add("Заработная плата, начисленная, " + row[0].Field<String>("CurrencyCode") + ": ", (_countingModul.SalaryCalculation(name, table)).ToString());
             return report;
         }
 

@@ -36,7 +36,7 @@ namespace HRList_BL
         }
 
 
-        public void GetSettings(Dictionary<string, string> dictionary, string SQLQueries) 
+        public void GetSettings(Dictionary<string, string> dictionary, string SQLQueries)
         {
             try
             {
@@ -62,7 +62,7 @@ namespace HRList_BL
             {
                 ConnectDB(sqlQuery);
                 _dataAdapter.Fill(table);
-               // _dbaseConnection.Close();
+                // _dbaseConnection.Close();
             }
             catch (Exception)
             {
@@ -82,7 +82,7 @@ namespace HRList_BL
                 command.Parameters.AddWithValue("@ID_Human", null);
                 command.Parameters.AddWithValue("@FullName", newUser["ФИО Работника: "]);
                 command.Parameters.AddWithValue("@DataStart", DateTime.Today);
-                command.Parameters.AddWithValue("@Password",  1);
+                command.Parameters.AddWithValue("@Password", 1);
                 command.Parameters.AddWithValue("@Supervisor", Convert.ToBoolean(newUser["Начальник: "]));
                 command.Parameters.AddWithValue("@ID_Position", Convert.ToInt32(positionList[newUser["Должность: "]]));
                 command.Parameters.AddWithValue("@ID_Unit", Convert.ToInt32(UnitList[newUser["Отдел: "]]));
@@ -117,7 +117,7 @@ namespace HRList_BL
 
 
 
-        public bool AuthorizationDB(string login, string password,  out string rules, out int idRules)
+        public bool AuthorizationDB(string login, string password, out string rules, out int idRules)
         {
 
             bool result = false;

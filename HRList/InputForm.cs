@@ -13,7 +13,6 @@ namespace HRList
             InitializeComponent();
         }
 
-        #region Properties
         public string Login
         {
             get { return LoginBox.Text; }
@@ -33,9 +32,7 @@ namespace HRList
         {
             Dispose();
         }
-        #endregion
 
-        #region Methods
         public void InputFormDialogResult() //сброс формы ввода
         {
             DialogResult = DialogResult.OK;
@@ -47,11 +44,8 @@ namespace HRList
         { 
             InputButtonClick?.Invoke(this, EventArgs.Empty);
         }
-        #endregion
 
-        #region Events
         public event EventHandler InputButtonClick;
-        #endregion
 
     }
 }

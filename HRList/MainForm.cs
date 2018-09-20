@@ -131,29 +131,42 @@ namespace HRList
 
         private void ResultCalculateMenuItem_Click(object sender, EventArgs e)
         {
-            // UserEventArgs arg = new UserEventArgs(lblUserName.Text);
             _requestedUser = lblUserName.Text;
-            ShowResult?.Invoke(this, EventArgs.Empty);
-            ResultFormcs resultform = new ResultFormcs
-            {
-                StartPosition = FormStartPosition.CenterScreen
-            };
-            resultform.Show();
-            int count = 0;
-            foreach (KeyValuePair<string, string> keyValue in _report)
-            {
-                count = count + 25;
-                Label lbl = new Label
-                {
-                    AutoSize = true,
-                    Text = keyValue.Key + keyValue.Value,
-                    Parent = resultform,
-                    Left = 20,
-                    Top = count,
-                    Visible = true
-                };
-            }
+            FormResultCreate();
+        }
 
+        private void DBView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            _requestedUser = DBView1["FullName", e.RowIndex].Value.ToString();
+            FormResultCreate();
+        }
+
+        private void FormResultCreate()
+        {
+            if (_requestedUser != string.Empty)
+            {
+                ShowResult?.Invoke(this, EventArgs.Empty);
+                ResultFormcs resultform = new ResultFormcs
+                {
+                    StartPosition = FormStartPosition.CenterScreen
+                };
+                resultform.Show();
+                int count = 0;
+                foreach (KeyValuePair<string, string> keyValue in _report)
+                {
+                    count = count + 25;
+                    Label lbl = new Label
+                    {
+                        AutoSize = true,
+                        Text = keyValue.Key + keyValue.Value,
+                        Parent = resultform,
+                        Left = 20,
+                        Top = count,
+                        Visible = true
+                    };
+                }
+                _requestedUser = string.Empty;
+            }
         }
 
         private void WorkerFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -233,32 +246,6 @@ namespace HRList
 
         #endregion
 
-        private void DBView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            _requestedUser = DBView1["FullName", e.RowIndex].Value.ToString();
 
-            ShowResult?.Invoke(this, EventArgs.Empty);
-            ResultFormcs resultform = new ResultFormcs
-            {
-                StartPosition = FormStartPosition.CenterScreen
-            };
-            resultform.Show();
-            int count = 0;
-            foreach (KeyValuePair<string, string> keyValue in _report)
-            {
-                count = count + 25;
-                Label lbl = new Label
-                {
-                    AutoSize = true,
-                    Text = keyValue.Key + keyValue.Value,
-                    Parent = resultform,
-                    Left = 20,
-                    Top = count,
-                    Visible = true
-                };
-            }
-
-
-        }
     }
 }

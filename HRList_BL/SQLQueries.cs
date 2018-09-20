@@ -35,8 +35,8 @@ namespace HRList_BL
 
         public static SQLQueries Instance
         {
-            get; 
-            private set; 
+            get;
+            private set;
         }
 
         public SQLQueries()

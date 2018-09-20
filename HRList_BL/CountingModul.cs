@@ -77,6 +77,13 @@ namespace HRList_BL
         #endregion
 
         #region Methods
+
+
+        public double SalaryCalculation(string name, DataTable table)
+        {
+            return BaseSalary(name, table) + BonusExperience(name, table) + BonusSubbordinates(name, table);
+        }
+
         public int Experience(string Name, DataTable table)
         {
             string filter = string.Format("FullName= '{0}'", Name);

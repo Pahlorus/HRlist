@@ -9,10 +9,9 @@ namespace HRList_BL
 {
     interface IDb
     {
-
-        void GetData(string query);
+        void GetData(string query, DataTable table);
         bool AuthorizationDB(string login, string password, out string rules, out int idRules);
-        void GetUserData(string login, int idRules);
+        void GetUserData(string login, int idRules, DataTable table);
     }
 
     public interface IHRBuisnessLogic
@@ -22,14 +21,12 @@ namespace HRList_BL
         string ActiveUser { get; }
         string RulesUser { get; }
         int IdRules { get; }
-        string Salary { get; }
         DataTable Table{ get; }
         event EventHandler Message;
         void GetUserList();
         void GetSettings();
         void UserInput(string login, string password);
         void UserOutput();
-        void SalaryCalculation();
         Dictionary<string, string> ReportCreate(string name, DataTable table);
         Dictionary<string, string> UnitList { get; set; }
         Dictionary<string, string> SubUnitList { get; set; }

@@ -2,11 +2,7 @@
 
 namespace HRList
 {
-    public interface IMessageService
-    {
-        void ShowMessage(string MessageText);
-        void ShowError(string ErrorText);
-    }
+
 
 
     public class MessageService: IMessageService

@@ -21,17 +21,16 @@ namespace HRList_BL
         string RulesUser { get; }
         int IdRules { get; }
         DataTable Table{ get; }
-        event EventHandler Message;
-        void GetUserList();
-        void GetSettings();
-        void UserInput(string login, string password);
-        void UserOutput();
-        Dictionary<string, string> ReportCreate(string name, DataTable table);
         Dictionary<string, string> UnitList { get; set; }
         Dictionary<string, string> SubUnitList { get; set; }
         Dictionary<string, string> PositiontList { get; set; }
         Dictionary<string, string> AccessRulesList { get; set; }
-
+        Dictionary<string, string> ReportCreate(string name, DataTable table);
+        event EventHandler Message;
+        void GetUserList();
+        void GetSettings();
+        void UserOutput();
+        void UserInput(string login, string password);
         void NewUserCreate(Dictionary<string, string> newUser, DataTable table);
     }
 }

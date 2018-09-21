@@ -10,13 +10,13 @@ namespace HRList_BL
     // Необходимо вынести классы для работы с БД в отдельную сборку
     class DBConnect : IDb
     {
-        SQLQueries _sqlQueries;
         // Имя отдела.
         private string nameunit;
         // Имя группы.
         private string namesubunit;
         // Выбор БД необходимо перенести в настройки.
         private string _connectionString = "Data Source = HR_DB.db; foreign keys=true; EnforceFKConstraints=Yes|True|1; Version=3";
+        private SQLQueries _sqlQueries;
         private SQLiteConnection _dbaseConnection;
         SQLiteDataAdapter _dataAdapter;
 
@@ -26,17 +26,12 @@ namespace HRList_BL
             _sqlQueries = new SQLQueries();
         }
 
-        public void GetSettingsAll(Dictionary<string, string> UnitList, Dictionary<string, string> subUnitList, Dictionary<string, string> positionList, Dictionary<string, string> accessRulesList)
-        {
-            GetSettings(UnitList, SQLQueries.Instance.UnitQuery);
-            GetSettings(subUnitList, SQLQueries.Instance.SubunitQuery);
-            GetSettings(positionList, SQLQueries.Instance.PositionQuery);
-            GetSettings(accessRulesList, SQLQueries.Instance.AccessRulesQuery);
-
-        }
+        event EventHandler DataSetError;
+        event EventHandler DataGetError;
+        event EventHandler ConnectError;
 
 
-        public void GetSettings(Dictionary<string, string> dictionary, string SQLQueries)
+        private void GetSettings(Dictionary<string, string> dictionary, string SQLQueries)
         {
             try
             {
@@ -54,21 +49,40 @@ namespace HRList_BL
             }
         }
 
-
-
-        public void GetData(string sqlQuery, DataTable table)
+        private void GetData(string sqlQuery, DataTable table)
         {
             try
             {
                 ConnectDB(sqlQuery);
                 _dataAdapter.Fill(table);
-                // _dbaseConnection.Close();
+                _dbaseConnection.Close();
             }
             catch (Exception)
             {
                 DataGetError?.Invoke(this, EventArgs.Empty);
             }
+        }
 
+        private void ConnectDB(string sqlQuery)
+        {
+            try
+            {
+                _dbaseConnection = new SQLiteConnection(_connectionString);
+                _dbaseConnection.Open();
+                _dataAdapter = new SQLiteDataAdapter(sqlQuery, _dbaseConnection);
+            }
+            catch (Exception)
+            {
+                ConnectError?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        public void GetSettingsAll(Dictionary<string, string> UnitList, Dictionary<string, string> subUnitList, Dictionary<string, string> positionList, Dictionary<string, string> accessRulesList)
+        {
+            GetSettings(UnitList, SQLQueries.Instance.UnitQuery);
+            GetSettings(subUnitList, SQLQueries.Instance.SubunitQuery);
+            GetSettings(positionList, SQLQueries.Instance.PositionQuery);
+            GetSettings(accessRulesList, SQLQueries.Instance.AccessRulesQuery);
         }
 
         public void SetData(Dictionary<string, string> newUser, Dictionary<string, string> UnitList, Dictionary<string, string> subUnitList, Dictionary<string, string> positionList, Dictionary<string, string> accessRulesList, DataTable table)
@@ -90,36 +104,17 @@ namespace HRList_BL
                 command.Parameters.AddWithValue("@ID_Access", Convert.ToInt32(accessRulesList[newUser["Должность: "]]));
                 _dataAdapter.InsertCommand = command;
                 _dataAdapter.Update(table);
-
-                //_dbaseConnection.Close();
+               _dbaseConnection.Close();
             }
             catch (Exception e)
             {
                 DataSetError?.Invoke(this, EventArgs.Empty);
                 MessageBox.Show(e.Message);
-
             }
         }
-
-        public void ConnectDB(string sqlQuery)
-        {
-            try
-            {
-                _dbaseConnection = new SQLiteConnection(_connectionString);
-                _dbaseConnection.Open();
-                _dataAdapter = new SQLiteDataAdapter(sqlQuery, _dbaseConnection);
-            }
-            catch (Exception)
-            {
-                ConnectError?.Invoke(this, EventArgs.Empty);
-            }
-        }
-
-
 
         public bool AuthorizationDB(string login, string password, out string rules, out int idRules)
         {
-
             bool result = false;
             rules = string.Empty;
             idRules = 0;
@@ -152,10 +147,5 @@ namespace HRList_BL
                 }
             }
         }
-
-        event EventHandler DataSetError;
-        event EventHandler DataGetError;
-        event EventHandler ConnectError;
-
     }
 }

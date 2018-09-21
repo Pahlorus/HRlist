@@ -41,9 +41,7 @@ namespace HRList_BL
 
         public SQLQueries()
         {
-
             Instance = this;
-
         }
 
         #region Properties
@@ -117,11 +115,9 @@ namespace HRList_BL
                         filter = "";
                     }
                     break;
-
             }
 
             return filter;
         }
-
     }
 }

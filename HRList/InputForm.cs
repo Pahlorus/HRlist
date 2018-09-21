@@ -12,6 +12,7 @@ namespace HRList
         {
             InitializeComponent();
         }
+        public event EventHandler InputButtonClick;
 
         public string Login
         {
@@ -33,19 +34,16 @@ namespace HRList
             Dispose();
         }
 
-        public void InputFormDialogResult() //сброс формы ввода
+        public void InputFormDialogResult()
         {
             DialogResult = DialogResult.OK;
             LoginBox.Text = "";
             PassBox.Text = "";
         }
 
-        private void InputButton_Click(object sender, EventArgs e)//
-        { 
+        private void InputButton_Click(object sender, EventArgs e)
+        {
             InputButtonClick?.Invoke(this, EventArgs.Empty);
         }
-
-        public event EventHandler InputButtonClick;
-
     }
 }

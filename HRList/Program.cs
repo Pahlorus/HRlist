@@ -20,8 +20,5 @@ namespace HRList
             MainPresenter presenter = new MainPresenter(mainform, iform, meservice, buisnesslogic);
             Application.Run(mainform);
         }
-
-
-
     }
 }

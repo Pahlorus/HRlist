@@ -35,9 +35,7 @@ namespace HRList
         private void _mainform_ShowResult(object sender, EventArgs e)
         {
             IMainForm name = (IMainForm)sender;
-
             _mainform.Report = _buisnesslogic.ReportCreate(name.RequestedUser, _buisnesslogic.Table);
-
         }
 
         private void _buisnesslogic_Message(object sender, EventArgs e)
@@ -62,7 +60,6 @@ namespace HRList
 
         private void _iform_InputButtonClick(object sender, EventArgs e)
         {
-
             _buisnesslogic.UserInput(_iform.Login, _iform.Password);
             _buisnesslogic.GetUserList();
             _mainform.Table = _buisnesslogic.Table;

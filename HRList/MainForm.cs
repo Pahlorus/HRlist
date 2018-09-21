@@ -9,7 +9,6 @@ namespace HRList
 {
     public partial class MainForm : Form, IMainForm
     {
-        private UserEditForm _editForm;
         private string _requestedUser;
         private string _result;
         private Dictionary<string, string> _report;
@@ -18,6 +17,7 @@ namespace HRList
         private Dictionary<string, string> _subUnitList;
         private Dictionary<string, string> _positionList;
         private Dictionary<string, string> _accessRulesList;
+        private UserEditForm _editForm;
 
         public MainForm()
         {
@@ -30,8 +30,13 @@ namespace HRList
             _subUnitList = new Dictionary<string, string>();
             _positionList = new Dictionary<string, string>();
             _accessRulesList = new Dictionary<string, string>();
-
         }
+
+        public event EventHandler FormShown;
+        public event EventHandler InputBDMenuClick;
+        public event EventHandler OutputBDMenuClick;
+        public event EventHandler ShowResult;
+        public event EventHandler OnAddUser;
 
         #region Properties
         public string SetActiveUser
@@ -51,7 +56,6 @@ namespace HRList
                 {
                     WorkerFileToolStripMenuItem.Enabled = false;
                 }
-
             }
         }
 
@@ -88,7 +92,6 @@ namespace HRList
             set { _subUnitList = value; }
         }
 
-
         public Dictionary<string, string> PositiontList
         {
             get { return _positionList; }
@@ -100,9 +103,6 @@ namespace HRList
             get { return _accessRulesList; }
             set { _accessRulesList = value; }
         }
-
-
-
 
         public string SelectedName
         {
@@ -232,20 +232,6 @@ namespace HRList
             }
 
         }
-
         #endregion
-
-        #region Events
-        public event EventHandler FormShown;
-        public event EventHandler InputBDMenuClick;
-        public event EventHandler OutputBDMenuClick;
-        public event EventHandler ShowResult;
-        public event EventHandler OnAddUser;
-
-
-
-        #endregion
-
-
     }
 }

@@ -34,6 +34,10 @@ namespace HRList_BL
             _accessRulesList = new Dictionary<string, string>();
         }
 
+        #region Events
+        public event EventHandler Message;
+        #endregion
+
         #region Properties
 
         public string Login
@@ -169,9 +173,5 @@ namespace HRList_BL
             }
 
         }
-
-        #region Events
-        public event EventHandler Message;
-        #endregion
     }
 }
